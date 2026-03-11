@@ -15,7 +15,7 @@
             font-family: 'Courier New', monospace;
             overflow: hidden;
             position: relative;
-            cursor: none; /* cursor disabled during lockdown */
+            cursor: none;
         }
         canvas#matrix {
             position: fixed;
@@ -27,7 +27,6 @@
             opacity: 0.9;
             pointer-events: none;
         }
-        /* FBI scanline overlay */
         body::after {
             content: '';
             position: fixed;
@@ -87,7 +86,6 @@
             80% { transform: translate(4px, 8px) skew(1deg); }
             100% { transform: translate(-7px, -3px) skew(-1deg); }
         }
-        /* FBI / DOJ official stamp */
         #govt-stamp {
             position: fixed;
             top: 15px;
@@ -134,24 +132,50 @@
             width: 100%;
             height: 100%;
             background: black;
-            color: #ffcc00;
+            color: #00ff00;
             font-size: 90px;
             font-weight: 900;
             justify-content: center;
             align-items: center;
             text-align: center;
             z-index: 200;
-            animation: glitchPop 0.6s infinite alternate;
-            text-shadow: 8px 0 red, -8px 0 blue;
-            font-family: Impact, 'Courier New', monospace;
+            animation: greenPop 0.8s infinite alternate;
+            text-shadow: 0 0 30px #00ff00, 0 0 60px #00ff00;
+            font-family: 'Courier New', monospace;
             letter-spacing: 8px;
+            flex-direction: column;
+            padding: 20px;
         }
-        @keyframes glitchPop {
-            0% { transform: scale(1) skew(0deg); opacity: 0.9; text-shadow: 20px 0 red, -20px 0 blue; }
-            50% { transform: scale(1.2) skew(8deg); opacity: 1; text-shadow: -20px 0 cyan, 20px 0 magenta; }
-            100% { transform: scale(1) skew(-5deg); opacity: 0.95; text-shadow: 25px 0 lime, -25px 0 yellow; }
+        @keyframes greenPop {
+            0% { transform: scale(1); text-shadow: 0 0 30px #00ff00; }
+            50% { transform: scale(1.1); text-shadow: 0 0 60px #00ff00, 0 0 90px #00ff00; }
+            100% { transform: scale(1); text-shadow: 0 0 30px #00ff00; }
         }
-
+        .april-sub {
+            font-size: 50px;
+            margin-top: 30px;
+            color: #00ff00;
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .april-credit {
+            font-size: 60px;
+            font-weight: bold;
+            color: #00ff00;
+            border: 5px solid #00ff00;
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px #00ff00;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 30px #00ff00; }
+            50% { box-shadow: 0 0 80px #00ff00; }
+            100% { box-shadow: 0 0 30px #00ff00; }
+        }
         .warning {
             position: fixed;
             top: 0;
@@ -239,7 +263,6 @@
             font-family: 'Courier New', monospace;
             backdrop-filter: blur(5px);
         }
-        /* target lock style */
         #target-lock {
             position: fixed;
             top: 50%;
@@ -266,7 +289,6 @@
             100% { width: 200px; height: 200px; opacity: 0.7; border-style: dashed; }
         }
 
-        /* LOCKDOWN OVERLAY (FULL TRAP) */
         #lockdown-overlay {
             position: fixed;
             top: 0;
@@ -300,13 +322,24 @@
             50% { opacity: 1; border-color: #ffff00; transform: translateX(-50%) scale(1.1); }
             100% { opacity: 0.5; border-color: #ff0000; }
         }
+        /* Fullscreen blocking overlay */
+        #inescapable-trap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 9999;
+            display: none;
+            pointer-events: all;
+        }
     </style>
 </head>
 <body>
 
     <canvas id="matrix"></canvas>
 
-    <!-- GOVERNMENT SEAL / FBI LOGO -->
     <div id="govt-stamp">
         <div>⚖️ FBI ⚖️</div>
         <div style="font-size: 11px;">U.S. DEPARTMENT OF JUSTICE</div>
@@ -314,26 +347,32 @@
         <div style="font-size: 12px; margin-top: 5px;">CYBER DIV.</div>
     </div>
 
-    <!-- TARGET LOCK VISUAL -->
     <div id="target-lock">🎯 LOCKED</div>
 
-    <!-- LOCKDOWN OVERLAY (TRAPS USER) -->
     <div id="lockdown-overlay">
         <div class="lockdown-message">🚫 MOVEMENT LOCKED • DO NOT ATTEMPT TO EXIT 🚫</div>
     </div>
+
+    <!-- Ultimate trap overlay -->
+    <div id="inescapable-trap"></div>
 
     <div id="terminal"></div>
     <div class="progress">
         <div class="bar" id="bar"></div>
     </div>
 
-    <!-- FINAL WARNING (APRIL FOOL WITH GOV TWIST) -->
-    <div id="april">💀 NATIONAL SECURITY 💀<br><span style="font-size:50px;">🔒 LOCKDOWN PROTOCOL ACTIVE 🔒</span></div>
+    <!-- APRIL FOOL PAGE WITH BIG GREEN TEXT AND EMOJIS -->
+    <div id="april">
+        <div class="april-credit">🎉 CREATED BY MOHIBULLAH 🎉</div>
+        <div class="april-sub">😂 APRIL FOOL! 😂</div>
+        <div style="font-size: 80px; margin-top: 40px;">🎈🎊🎉</div>
+        <div style="font-size: 40px; margin-top: 30px;">🔥 YOU'VE BEEN PRANKED! 🔥</div>
+        <div style="font-size: 30px; margin-top: 30px; color: #ffaa00;">🎭 BOLO TATA BYE BYE! 🎭</div>
+    </div>
 
     <div id="glitch-text">🎯 TARGET ACQUIRED</div>
     <div class="credit">FBI • JOINT TASK FORCE • CLASSIFIED</div>
 
-    <!-- popups -->
     <div id="pop1" class="popup-warning" style="border-color:#ffcc00;">📡 SATELLITE LOCK</div>
     <div id="pop2" class="popup-warning" style="top:70%; left:70%; transform: rotate(-10deg); border-color:#ff0000;">🎯 GPS: 38.8977° N, 77.0365° W</div>
     <div id="pop3" class="popup-warning" style="top:40%; left:15%; border-color: #ffff00;">🔓 TOP SECRET // SI//NOFORN</div>
@@ -342,109 +381,253 @@
         <source src="https://www.soundjay.com/misc/sounds/alarm-clock-01.mp3">
     </audio>
 
-    <!-- SCARY VOICE -->
     <audio id="voiceLine" preload="auto">
         <source src="https://www.myinstants.com/media/sounds/target-locked.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- ONLY LAUGHING VOICE (plays twice) -->
+    <audio id="laughSound" preload="auto">
+        <source src="https://www.myinstants.com/media/sounds/laugh-troll.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         (function() {
-            // BLOCK ALL EXIT ATTEMPTS
-            // Disable right-click context menu
+            // ==================== INESCAPABLE TRAP SYSTEM ====================
+            
+            // Block all possible exit attempts
+            
+            // 1. Disable right-click
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 return false;
             });
-
-            // Disable keyboard shortcuts (F11, F5, Ctrl+R, Ctrl+W, Alt+F4, Escape, etc.)
+            
+            // 2. Block all keyboard shortcuts and function keys
             document.addEventListener('keydown', function(e) {
-                // Prevent all function keys, escape, alt combinations, ctrl combinations
-                if (e.key === 'Escape' || 
-                    e.key === 'F11' || 
-                    e.key === 'F5' || 
-                    e.key === 'F4' ||
-                    e.key === 'F3' ||
-                    e.key === 'F2' ||
-                    e.key === 'F1' ||
-                    e.key === 'F12' ||
-                    e.key === 'Tab' ||
-                    e.key === 'Alt' ||
-                    e.key === 'Control' ||
-                    e.key === 'Meta' ||
-                    e.key === 'Windows' ||
-                    e.keyCode === 27 || // Escape
-                    e.keyCode === 116 || // F5
-                    e.keyCode === 122 || // F11
-                    e.keyCode === 123 || // F12
-                    e.keyCode === 9 ||   // Tab
-                    (e.ctrlKey && e.key === 'r') ||
-                    (e.ctrlKey && e.key === 'R') ||
-                    (e.ctrlKey && e.key === 'w') ||
-                    (e.ctrlKey && e.key === 'W') ||
-                    (e.ctrlKey && e.key === 't') ||
-                    (e.ctrlKey && e.key === 'T') ||
-                    (e.altKey && e.key === 'F4') ||
-                    (e.altKey && e.keyCode === 115) || // Alt+F4
-                    (e.ctrlKey && e.shiftKey && e.key === 'i') ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'c') ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-                    (e.ctrlKey && e.key === 'u') ||
-                    (e.ctrlKey && e.key === 'U')
+                // List of all keys to block
+                const blockedKeys = [
+                    'Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+                    'Tab', 'Alt', 'Control', 'Meta', 'Windows', 'ContextMenu', 'Delete', 'Insert',
+                    'Home', 'End', 'PageUp', 'PageDown', 'PrintScreen', 'ScrollLock', 'Pause',
+                    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
+                ];
+                
+                // Block function keys by keyCode as well
+                if (e.keyCode === 27 || // Escape
+                    (e.keyCode >= 112 && e.keyCode <= 123) || // F1-F12
+                    e.keyCode === 9 || // Tab
+                    e.keyCode === 18 || // Alt
+                    e.keyCode === 17 || // Ctrl
+                    e.keyCode === 91 || // Meta/Windows
+                    e.keyCode === 93 || // Context Menu
+                    e.keyCode === 46 || // Delete
+                    e.keyCode === 36 || // Home
+                    e.keyCode === 35 || // End
+                    e.keyCode === 33 || // PageUp
+                    e.keyCode === 34 || // PageDown
+                    e.keyCode === 44 || // PrintScreen
+                    e.keyCode === 145 || // ScrollLock
+                    e.keyCode === 19 || // Pause
+                    (e.keyCode >= 37 && e.keyCode <= 40) // Arrow keys
                 ) {
                     e.preventDefault();
                     e.stopPropagation();
                     return false;
                 }
                 
-                // Also prevent Alt key combinations
+                // Block all combinations
+                if (e.ctrlKey || e.altKey || e.metaKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                
+                // Block Ctrl+ combinations explicitly
+                if (e.ctrlKey && (e.key === 'r' || e.key === 'R' || e.key === 'w' || e.key === 'W' || 
+                    e.key === 't' || e.key === 'T' || e.key === 'n' || e.key === 'N' ||
+                    e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V' ||
+                    e.key === 'a' || e.key === 'A' || e.key === 's' || e.key === 'S' ||
+                    e.key === 'o' || e.key === 'O' || e.key === 'p' || e.key === 'P' ||
+                    e.key === 'q' || e.key === 'Q')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                
+                // Block Alt+ combinations (including Alt+F4)
                 if (e.altKey) {
                     e.preventDefault();
+                    e.stopPropagation();
                     return false;
                 }
             });
-
-            // Prevent mouse leave attempts (cursor near edges)
-            document.addEventListener('mouseleave', function(e) {
-                // Force mouse back to center when it tries to leave
-                if (document.getElementById('lockdown-overlay').style.display === 'block') {
-                    // Simulate mouse move to center (cannot actually move cursor, but we can show warning)
-                }
-            });
-
-            // Disable pointer lock and fullscreen attempts
+            
+            // 3. Block fullscreen attempts
             document.addEventListener('fullscreenchange', function(e) {
                 if (document.fullscreenElement) {
                     document.exitFullscreen();
                 }
             });
-
+            
             document.addEventListener('webkitfullscreenchange', function(e) {
                 if (document.webkitFullscreenElement) {
                     document.webkitExitFullscreen();
                 }
             });
-
-            // Prevent navigation via beforeunload
-            window.addEventListener('beforeunload', function(e) {
-                if (document.getElementById('lockdown-overlay').style.display === 'block' || progress >= 80) {
-                    e.preventDefault();
-                    e.returnValue = 'SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED';
-                    return 'SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED';
+            
+            document.addEventListener('mozfullscreenchange', function(e) {
+                if (document.mozFullScreenElement) {
+                    document.mozCancelFullScreen();
                 }
             });
-
-            // Block history navigation
+            
+            document.addEventListener('MSFullscreenChange', function(e) {
+                if (document.msFullscreenElement) {
+                    document.msExitFullscreen();
+                }
+            });
+            
+            // 4. Prevent window close / navigation
+            window.addEventListener('beforeunload', function(e) {
+                e.preventDefault();
+                e.returnValue = '⚠️ SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED ⚠️';
+                return '⚠️ SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED ⚠️';
+            });
+            
+            // 5. Block history navigation (back/forward buttons)
             history.pushState(null, null, location.href);
             window.addEventListener('popstate', function(e) {
                 history.pushState(null, null, location.href);
             });
-
-            // small freeze for effect
+            
+            // 6. Disable mouse leave events and pointer lock
+            document.addEventListener('mouseleave', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 7. Block all drag and drop
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            document.addEventListener('drop', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 8. Block selection
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 9. Block copy/paste/cut
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            document.addEventListener('paste', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 10. Override window.close
+            window.close = function() {
+                console.log('Close blocked');
+                return false;
+            };
+            
+            // 11. Block window.open
+            window.open = function() {
+                return null;
+            };
+            
+            // 12. Disable developer tools detection and blocking
+            setInterval(function() {
+                const widthThreshold = window.outerWidth - window.innerWidth > 160;
+                const heightThreshold = window.outerHeight - window.innerHeight > 160;
+                if (widthThreshold || heightThreshold) {
+                    document.body.innerHTML = '<div style="color:red;font-size:50px;text-align:center;margin-top:20%;">🔴 DEVTOOLS DETECTED - TERMINAL LOCKDOWN 🔴</div>';
+                }
+            }, 1000);
+            
+            // 13. Override console methods
+            console.log = function() {};
+            console.warn = function() {};
+            console.error = function() {};
+            console.info = function() {};
+            
+            // 14. Prevent any new window creation
+            window.open = function() { return null; };
+            
+            // 15. Lock pointer when lockdown active
+            function lockPointer() {
+                if (document.getElementById('lockdown-overlay').style.display === 'block') {
+                    if (canvas.requestPointerLock) {
+                        canvas.requestPointerLock();
+                    }
+                }
+            }
+            
+            // 16. Continuously re-lock pointer
+            setInterval(lockPointer, 100);
+            
+            // 17. Block all mouse clicks when lockdown active
+            document.addEventListener('click', function(e) {
+                if (document.getElementById('lockdown-overlay').style.display === 'block') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, true);
+            
+            // 18. Block all mouse movements that try to leave
+            document.addEventListener('mousemove', function(e) {
+                if (document.getElementById('lockdown-overlay').style.display === 'block') {
+                    if (e.clientX < 10 || e.clientY < 10 || e.clientX > window.innerWidth - 10 || e.clientY > window.innerHeight - 10) {
+                        document.querySelector('.lockdown-message').style.color = '#ffff00';
+                        setTimeout(() => {
+                            document.querySelector('.lockdown-message').style.color = '#ff0000';
+                        }, 200);
+                    }
+                }
+            });
+            
+            // 19. Disable touch events for mobile
+            document.addEventListener('touchstart', function(e) {
+                if (document.getElementById('lockdown-overlay').style.display === 'block') {
+                    e.preventDefault();
+                }
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (document.getElementById('lockdown-overlay').style.display === 'block') {
+                    e.preventDefault();
+                }
+            });
+            
+            // 20. Prevent browser from showing save as / etc
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // ==================== ORIGINAL CODE CONTINUES ====================
+            
             let start = Date.now();
             while (Date.now() - start < 300) {} 
 
-            // ========== MATRIX CANVAS ==========
             let canvas = document.getElementById('matrix');
             let ctx = canvas.getContext('2d');
             canvas.height = window.innerHeight;
@@ -469,7 +652,6 @@
             }
             setInterval(drawMatrix, 40);
 
-            // ========== TERMINAL MESSAGES ==========
             let terminal = document.getElementById("terminal");
             let text = [
                 "FBI CYBER DIVISION // JOINT TERRORISM TASK FORCE",
@@ -510,7 +692,6 @@
             }
             type();
 
-            // ========== PROGRESS & LOCKDOWN LOGIC ==========
             let bar = document.getElementById("bar");
             let progress = 0;
             let body = document.body;
@@ -525,8 +706,11 @@
             let voiceLine = document.getElementById('voiceLine');
             voiceLine.volume = 0.7;
             let lockdownOverlay = document.getElementById('lockdown-overlay');
+            
+            // ONLY LAUGHING VOICE
+            let laughSound = document.getElementById('laughSound');
+            laughSound.volume = 0.8;
 
-            // Web Speech API for voice
             function speakTargetLocked() {
                 if ('speechSynthesis' in window) {
                     let utterance = new SpeechSynthesisUtterance("Target locked. FBI. Movement lockdown engaged.");
@@ -539,13 +723,45 @@
                 }
             }
 
+            // Function to play only laughing voice twice
+            function playAprilLaugh() {
+                // Play laugh first time
+                laughSound.play().catch(e => {
+                    if ('speechSynthesis' in window) {
+                        let utterance = new SpeechSynthesisUtterance("Ha ha ha ha");
+                        utterance.volume = 1;
+                        utterance.rate = 1;
+                        utterance.pitch = 0.8;
+                        window.speechSynthesis.speak(utterance);
+                    }
+                });
+                
+                // Play laugh second time after 1 second
+                setTimeout(() => {
+                    laughSound.currentTime = 0; // Reset to start
+                    laughSound.play().catch(e => {
+                        if ('speechSynthesis' in window) {
+                            let utterance = new SpeechSynthesisUtterance("Ha ha ha ha");
+                            utterance.volume = 1;
+                            utterance.rate = 1;
+                            utterance.pitch = 0.8;
+                            window.speechSynthesis.speak(utterance);
+                        }
+                    });
+                }, 1000);
+            }
+
+            const TOTAL_SECONDS = 210;
+            const INCREMENT_PER_STEP = 100 / TOTAL_SECONDS;
+            
             let interval = setInterval(() => {
-                progress += 3; 
+                progress = Math.min(progress + INCREMENT_PER_STEP, 100);
+                
                 if (progress > 35 && progress < 75) {
-                    if (progress === 38) pop1.style.display = 'block';
-                    if (progress === 48) pop2.style.display = 'block';
-                    if (progress === 58) pop3.style.display = 'block';
-                    if (progress === 44) {
+                    if (progress >= 38 && progress < 39) pop1.style.display = 'block';
+                    if (progress >= 48 && progress < 49) pop2.style.display = 'block';
+                    if (progress >= 58 && progress < 59) pop3.style.display = 'block';
+                    if (progress >= 44 && progress < 45) {
                         targetLock.style.display = 'flex';
                         voiceLine.play().catch(e => speakTargetLocked());
                     }
@@ -565,37 +781,35 @@
                     }
                 }
 
-                // Activate lockdown overlay at 80% - user cannot move/exit
                 if (progress >= 80 && lockdownOverlay.style.display !== 'block') {
                     lockdownOverlay.style.display = 'block';
-                    // Force cursor hide
                     document.body.style.cursor = 'none';
-                    // Additional keyboard trap
                     speakTargetLocked();
                     
-                    // Disable all mouse movements (cursor already hidden, but we can also lock pointer)
                     if (canvas.requestPointerLock) {
                         canvas.requestPointerLock();
                     }
                 }
 
-                // extra stamp effect
                 if (progress > 50 && progress < 80) {
                     govtStamp.style.filter = "invert(0.2) hue-rotate(10deg)";
                 } else {
                     govtStamp.style.filter = "none";
                 }
 
-                // flash glitch text
-                if (progress % 10 === 0) {
-                    document.getElementById('glitch-text').innerHTML = '🎯 ' + (progress) + '% LOCKED';
+                if (Math.floor(progress) % 10 === 0) {
+                    document.getElementById('glitch-text').innerHTML = '🎯 ' + Math.floor(progress) + '% LOCKED';
                 }
 
                 if (progress >= 100) {
                     clearInterval(interval);
                     body.classList.remove("shake");
                     
-                    // FBI WARNING FULLSCREEN
+                    alarm.pause();
+                    alarm.currentTime = 0;
+                    voiceLine.pause();
+                    voiceLine.currentTime = 0;
+                    
                     let warnDiv = document.createElement('div');
                     warnDiv.className = 'warning';
                     warnDiv.innerHTML = '🔴 FEDERAL BUREAU OF INVESTIGATION 🔴<br>DEVICE SEIZED<br><span style="font-size:40px;">TITLE 18 U.S.C. § 2703</span><br><span style="font-size:25px;">🔒 LOCKDOWN PROTOCOL ENGAGED 🔒</span>';
@@ -612,20 +826,25 @@
                     if(credit) credit.style.opacity = '0.1';
                     if(stamp) stamp.style.opacity = '0.4';
 
-                    // lockdown overlay remains
                     lockdownOverlay.style.display = 'block';
                     document.body.style.cursor = 'none';
 
+                    // Show APRIL FOOL page with big green text and play laugh twice
                     setTimeout(() => {
                         let april = document.getElementById('april');
                         april.style.display = 'flex';
-                        warnDiv.style.opacity = '0.2';
-                        speakTargetLocked();
-                    }, 3500);
+                        warnDiv.style.opacity = '0';
+                        
+                        // Play only the laughing voice twice
+                        playAprilLaugh();
+                        
+                        setTimeout(() => {
+                            warnDiv.remove();
+                        }, 500);
+                    }, 2000);
                 }
-            }, 220);
+            }, 1000);
 
-            // ========== AUDIO CONTEXT ==========
             let audioCtx = null;
             function initAudio() {
                 if (audioCtx) return;
@@ -664,7 +883,6 @@
                 }
             }, { once: true });
 
-            // periodic voice
             setInterval(() => {
                 if (progress > 80 && progress < 99) {
                     if (Math.random() < 0.15) {
@@ -673,7 +891,6 @@
                 }
             }, 3000);
 
-            // scroll terminal
             setInterval(() => {
                 terminal.scrollIntoView(false);
             }, 700);
@@ -686,9 +903,10 @@
                 for (let x = 0; x < columns; x++) drops[x] = Math.floor(Math.random() * canvas.height/fontSize);
             });
 
+            // Preload all audio
             voiceLine.load();
+            laughSound.load();
 
-            // Final trap: prevent mouse from moving overlay
             lockdownOverlay.addEventListener('mousemove', function(e) {
                 e.preventDefault();
                 return false;
