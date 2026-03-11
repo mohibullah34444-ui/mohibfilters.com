@@ -3,65 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Access</title>
+    <title>🔴 U.S. GOVERNMENT • LOCKDOWN PROTOCOL</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             margin: 0;
             background: black;
             color: #00ff00;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             overflow: hidden;
+            position: relative;
+            cursor: none; /* cursor disabled during lockdown */
         }
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-        #terminal {
-            padding: 20px;
-            font-size: 14px;
-        }
-        .warning {
+        canvas#matrix {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: red;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 40px;
-            font-weight: bold;
-            animation: flash 1s infinite;
+            z-index: 0;
+            opacity: 0.9;
+            pointer-events: none;
         }
-        @keyframes flash {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
+        /* FBI scanline overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,40,0,0.2) 0px, rgba(255,0,0,0.05) 2px, transparent 4px);
+            pointer-events: none;
+            z-index: 5;
+            mix-blend-mode: multiply;
+        }
+        #terminal {
+            position: relative;
+            z-index: 10;
+            padding: 25px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 8px #ff0000, 0 0 12px #ff0000;
+            max-width: 1000px;
+            background-color: rgba(0,0,0,0.75);
+            border-left: 6px solid #ff0000;
+            margin: 25px;
+            border-radius: 0 18px 18px 0;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 60px #ff0000;
+            white-space: pre-wrap;
+            word-break: break-word;
+            pointer-events: none;
+            color: #ff6666;
+            border-image: repeating-linear-gradient(45deg, red, darkred 10px) 30;
         }
         .progress {
+            position: relative;
+            z-index: 10;
             width: 80%;
-            height: 20px;
-            border: 2px solid #00ff00;
-            margin: 20px auto;
+            height: 32px;
+            border: 4px solid #ff0000;
+            margin: 30px auto;
+            box-shadow: 0 0 40px red, inset 0 0 30px darkred;
+            background: #1a0000;
+            border-radius: 16px;
         }
         .bar {
             height: 100%;
             width: 0%;
-            background: #00ff00;
+            background: linear-gradient(90deg, #ff3333, #ffcc00, #ff0000);
+            box-shadow: 0 0 60px #ff8800;
+            border-radius: 12px;
+            transition: width 0.2s ease;
         }
         .shake {
-            animation: shake 0.3s infinite;
+            animation: doj-shake 0.06s infinite !important;
         }
-        @keyframes shake {
-            0% { transform: translate(3px, 3px); }
-            25% { transform: translate(-3px, -3px); }
-            50% { transform: translate(3px, -3px); }
-            75% { transform: translate(-3px, 3px); }
-            100% { transform: translate(3px, 3px); }
+        @keyframes doj-shake {
+            0% { transform: translate(6px, 3px) skew(1deg); }
+            20% { transform: translate(-8px, 5px) skew(-2deg); }
+            40% { transform: translate(9px, -4px) skew(3deg); }
+            60% { transform: translate(-5px, -7px) skew(-3deg); }
+            80% { transform: translate(4px, 8px) skew(1deg); }
+            100% { transform: translate(-7px, -3px) skew(-1deg); }
+        }
+        /* FBI / DOJ official stamp */
+        #govt-stamp {
+            position: fixed;
+            top: 15px;
+            right: 25px;
+            width: 140px;
+            height: 140px;
+            z-index: 45;
+            background: radial-gradient(circle, #990000, #330000);
+            border: 6px double #ffcc00;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffcc00;
+            font-weight: 900;
+            font-size: 22px;
+            text-transform: uppercase;
+            box-shadow: 0 0 50px #ffaa00;
+            animation: stampPulse 1.2s infinite;
+            line-height: 1.2;
+            font-family: 'Times New Roman', serif;
+            padding: 10px;
+            text-align: center;
+            backdrop-filter: blur(2px);
+        }
+        @keyframes stampPulse {
+            0% { box-shadow: 0 0 30px #ffaa00; transform: scale(1); }
+            50% { box-shadow: 0 0 80px #ff3300; transform: scale(1.02); }
+            100% { box-shadow: 0 0 30px #ffaa00; transform: scale(1); }
+        }
+        .seal-text {
+            font-size: 14px;
+            border-top: 2px solid #ffcc00;
+            padding-top: 5px;
+            margin-top: 3px;
+            letter-spacing: 2px;
         }
         #april {
             display: none;
@@ -71,111 +134,566 @@
             width: 100%;
             height: 100%;
             background: black;
-            color: yellow;
-            font-size: 70px;
+            color: #ffcc00;
+            font-size: 90px;
+            font-weight: 900;
             justify-content: center;
             align-items: center;
             text-align: center;
-            animation: pop 1s infinite alternate;
+            z-index: 200;
+            animation: glitchPop 0.6s infinite alternate;
+            text-shadow: 8px 0 red, -8px 0 blue;
+            font-family: Impact, 'Courier New', monospace;
+            letter-spacing: 8px;
         }
-        @keyframes pop {
-            from { transform: scale(1); }
-            to { transform: scale(1.2); }
+        @keyframes glitchPop {
+            0% { transform: scale(1) skew(0deg); opacity: 0.9; text-shadow: 20px 0 red, -20px 0 blue; }
+            50% { transform: scale(1.2) skew(8deg); opacity: 1; text-shadow: -20px 0 cyan, 20px 0 magenta; }
+            100% { transform: scale(1) skew(-5deg); opacity: 0.95; text-shadow: 25px 0 lime, -25px 0 yellow; }
+        }
+
+        .warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #8b0000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 70px;
+            font-weight: 900;
+            z-index: 150;
+            text-align: center;
+            animation: flashQuick 0.3s infinite;
+            text-shadow: 5px 5px 0 black;
+            border: 15px solid #ffcc00;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', serif;
+        }
+        @keyframes flashQuick {
+            0% { background: #b30000; opacity: 1; }
+            25% { background: #800000; opacity: 0.95; filter: invert(0.05); }
+            50% { background: #cc0000; opacity: 1; filter: invert(0.1); }
+            75% { background: #660000; opacity: 0.9; }
+            100% { background: #b30000; opacity: 1; }
+        }
+
+        #glitch-text {
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            color: #ff6666;
+            font-size: 36px;
+            z-index: 50;
+            font-weight: bold;
+            opacity: 0.9;
+            text-shadow: 0 0 20px red, 0 0 40px darkred;
+            background: black;
+            padding: 12px 24px;
+            border: 4px solid #ff0000;
+            border-radius: 40px;
+            animation: flickerBlink 0.15s infinite;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+        }
+        @keyframes flickerBlink {
+            0% { opacity: 0.3; transform: scale(0.98); border-color: #ff4444; }
+            50% { opacity: 1; transform: scale(1.03); border-color: #ffff00; }
+            100% { opacity: 0.3; transform: scale(0.98); border-color: #ff0000; }
+        }
+
+        .credit {
+            position: fixed;
+            bottom: 15px;
+            left: 25px;
+            color: #660000;
+            font-size: 18px;
+            z-index: 40;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            filter: blur(0.7px);
+            opacity: 0.6;
+            pointer-events: none;
+            font-weight: bold;
+        }
+
+        .popup-warning {
+            position: fixed;
+            top: 20%;
+            left: 10%;
+            background: black;
+            border: 6px solid #ff6600;
+            color: #ffaaaa;
+            padding: 30px;
+            font-size: 32px;
+            transform: rotate(5deg);
+            box-shadow: 25px 25px 0 #8b0000;
+            z-index: 120;
+            display: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+            backdrop-filter: blur(5px);
+        }
+        /* target lock style */
+        #target-lock {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 4px dashed #ff0000;
+            border-radius: 50%;
+            box-shadow: 0 0 100px red;
+            z-index: 60;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            animation: targetPulse 0.7s infinite;
+            background: rgba(128,0,0,0.3);
+            backdrop-filter: blur(3px);
+        }
+        @keyframes targetPulse {
+            0% { width: 200px; height: 200px; opacity: 0.7; border-style: dashed; }
+            50% { width: 260px; height: 260px; opacity: 1; border-style: solid; border-color: #ffff00; box-shadow: 0 0 200px yellow; }
+            100% { width: 200px; height: 200px; opacity: 0.7; border-style: dashed; }
+        }
+
+        /* LOCKDOWN OVERLAY (FULL TRAP) */
+        #lockdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 1000;
+            display: none;
+            pointer-events: all;
+            cursor: none;
+        }
+        .lockdown-message {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0000;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 20px red;
+            background: black;
+            padding: 15px 30px;
+            border: 3px solid red;
+            border-radius: 50px;
+            animation: lockWarning 0.5s infinite;
+            white-space: nowrap;
+        }
+        @keyframes lockWarning {
+            0% { opacity: 0.5; border-color: #ff0000; }
+            50% { opacity: 1; border-color: #ffff00; transform: translateX(-50%) scale(1.1); }
+            100% { opacity: 0.5; border-color: #ff0000; }
         }
     </style>
-    <script>
-        let start = Date.now();
-        while (Date.now() - start < 300000) {}
-    </script>
 </head>
 <body>
+
     <canvas id="matrix"></canvas>
+
+    <!-- GOVERNMENT SEAL / FBI LOGO -->
+    <div id="govt-stamp">
+        <div>⚖️ FBI ⚖️</div>
+        <div style="font-size: 11px;">U.S. DEPARTMENT OF JUSTICE</div>
+        <div class="seal-text">★ OFFICIAL ★</div>
+        <div style="font-size: 12px; margin-top: 5px;">CYBER DIV.</div>
+    </div>
+
+    <!-- TARGET LOCK VISUAL -->
+    <div id="target-lock">🎯 LOCKED</div>
+
+    <!-- LOCKDOWN OVERLAY (TRAPS USER) -->
+    <div id="lockdown-overlay">
+        <div class="lockdown-message">🚫 MOVEMENT LOCKED • DO NOT ATTEMPT TO EXIT 🚫</div>
+    </div>
+
     <div id="terminal"></div>
     <div class="progress">
         <div class="bar" id="bar"></div>
     </div>
-    <div id="april">😂 APRIL FOOL 😂</div>
-    <h1>wishing you a nice day</h1>
-    <b>CREATED BY: <span style="color:green;">MOHIB ULLAH</span></b>
+
+    <!-- FINAL WARNING (APRIL FOOL WITH GOV TWIST) -->
+    <div id="april">💀 NATIONAL SECURITY 💀<br><span style="font-size:50px;">🔒 LOCKDOWN PROTOCOL ACTIVE 🔒</span></div>
+
+    <div id="glitch-text">🎯 TARGET ACQUIRED</div>
+    <div class="credit">FBI • JOINT TASK FORCE • CLASSIFIED</div>
+
+    <!-- popups -->
+    <div id="pop1" class="popup-warning" style="border-color:#ffcc00;">📡 SATELLITE LOCK</div>
+    <div id="pop2" class="popup-warning" style="top:70%; left:70%; transform: rotate(-10deg); border-color:#ff0000;">🎯 GPS: 38.8977° N, 77.0365° W</div>
+    <div id="pop3" class="popup-warning" style="top:40%; left:15%; border-color: #ffff00;">🔓 TOP SECRET // SI//NOFORN</div>
+
     <audio id="alarm" loop>
         <source src="https://www.soundjay.com/misc/sounds/alarm-clock-01.mp3">
     </audio>
+
+    <!-- SCARY VOICE -->
+    <audio id="voiceLine" preload="auto">
+        <source src="https://www.myinstants.com/media/sounds/target-locked.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        let text = [
-            "Connecting to satellite...",
-            "Accessing device files...",
-            "Tracking GPS location...",
-            "Scanning contacts...",
-            "Scanning photos...",
-            "Uploading file: IMG_2034.jpg → remote server...",
-            "Uploading file: IMG_2035.jpg → remote server...",
-            "Uploading file: camera_video.mp4 → remote server...",
-            "Uploading gallery photos (1/5)...",
-            "Uploading gallery photos (2/5)...",
-            "Uploading gallery photos (3/5)...",
-            "Uploading gallery photos (4/5)...",
-            "Uploading gallery photos (5/5)...",
-            "Extracting private files...",
-            "Uploading documents: bank_info.pdf...",
-            "Uploading documents: passwords.txt...",
-            "Injecting security exploit...",
-            "Bypassing firewall...",
-            "Device control established...",
-            "Preparing system lock..."
-        ];
-        let i = 0;
-        let terminal = document.getElementById("terminal");
+        (function() {
+            // BLOCK ALL EXIT ATTEMPTS
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
 
-        function type() {
-            if (i < text.length) {
-                terminal.innerHTML += text[i] + "<br>";
-                i++;
-                setTimeout(type, 800);
-            }
-        }
-        type();
+            // Disable keyboard shortcuts (F11, F5, Ctrl+R, Ctrl+W, Alt+F4, Escape, etc.)
+            document.addEventListener('keydown', function(e) {
+                // Prevent all function keys, escape, alt combinations, ctrl combinations
+                if (e.key === 'Escape' || 
+                    e.key === 'F11' || 
+                    e.key === 'F5' || 
+                    e.key === 'F4' ||
+                    e.key === 'F3' ||
+                    e.key === 'F2' ||
+                    e.key === 'F1' ||
+                    e.key === 'F12' ||
+                    e.key === 'Tab' ||
+                    e.key === 'Alt' ||
+                    e.key === 'Control' ||
+                    e.key === 'Meta' ||
+                    e.key === 'Windows' ||
+                    e.keyCode === 27 || // Escape
+                    e.keyCode === 116 || // F5
+                    e.keyCode === 122 || // F11
+                    e.keyCode === 123 || // F12
+                    e.keyCode === 9 ||   // Tab
+                    (e.ctrlKey && e.key === 'r') ||
+                    (e.ctrlKey && e.key === 'R') ||
+                    (e.ctrlKey && e.key === 'w') ||
+                    (e.ctrlKey && e.key === 'W') ||
+                    (e.ctrlKey && e.key === 't') ||
+                    (e.ctrlKey && e.key === 'T') ||
+                    (e.altKey && e.key === 'F4') ||
+                    (e.altKey && e.keyCode === 115) || // Alt+F4
+                    (e.ctrlKey && e.shiftKey && e.key === 'i') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'c') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                    (e.ctrlKey && e.key === 'u') ||
+                    (e.ctrlKey && e.key === 'U')
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+                
+                // Also prevent Alt key combinations
+                if (e.altKey) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
 
-        let bar = document.getElementById("bar");
-        let progress = 0;
-        let interval = setInterval(() => {
-            progress += 5;
-            bar.style.width = progress + "%";
-            if (progress > 50) {
-                document.body.classList.add("shake");
-                document.getElementById("alarm").play();
-            }
-            if (progress >= 100) {
-                clearInterval(interval);
-                document.body.innerHTML = "<div class='warning'>FBI WARNING<br>DEVICE LOCKED</div>";
-                setTimeout(() => {
-                    document.getElementById("april").style.display = "flex";
-                }, 4000);
-            }
-        }, 300);
+            // Prevent mouse leave attempts (cursor near edges)
+            document.addEventListener('mouseleave', function(e) {
+                // Force mouse back to center when it tries to leave
+                if (document.getElementById('lockdown-overlay').style.display === 'block') {
+                    // Simulate mouse move to center (cannot actually move cursor, but we can show warning)
+                }
+            });
 
-        let canvas = document.getElementById("matrix");
-        let ctx = canvas.getContext("2d");
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
-        let letters = "01".split("");
-        let fontSize = 14;
-        let columns = canvas.width / fontSize;
-        let drops = [];
-        for (let x = 0; x < columns; x++) drops[x] = 1;
+            // Disable pointer lock and fullscreen attempts
+            document.addEventListener('fullscreenchange', function(e) {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                }
+            });
 
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#0F0";
-            ctx.font = fontSize + "px monospace";
-            for (let i = 0; i < drops.length; i++) {
-                let text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
+            document.addEventListener('webkitfullscreenchange', function(e) {
+                if (document.webkitFullscreenElement) {
+                    document.webkitExitFullscreen();
+                }
+            });
+
+            // Prevent navigation via beforeunload
+            window.addEventListener('beforeunload', function(e) {
+                if (document.getElementById('lockdown-overlay').style.display === 'block' || progress >= 80) {
+                    e.preventDefault();
+                    e.returnValue = 'SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED';
+                    return 'SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED';
+                }
+            });
+
+            // Block history navigation
+            history.pushState(null, null, location.href);
+            window.addEventListener('popstate', function(e) {
+                history.pushState(null, null, location.href);
+            });
+
+            // small freeze for effect
+            let start = Date.now();
+            while (Date.now() - start < 300) {} 
+
+            // ========== MATRIX CANVAS ==========
+            let canvas = document.getElementById('matrix');
+            let ctx = canvas.getContext('2d');
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+            let letters = "01 FBI NSA CIA 01 ⚡ ⚡ ⚡".split(" ");
+            let fontSize = 22;
+            let columns = canvas.width / fontSize;
+            let drops = [];
+            for (let x = 0; x < columns; x++) drops[x] = Math.floor(Math.random() * canvas.height/fontSize);
+
+            function drawMatrix() {
+                ctx.fillStyle = "rgba(0,0,0,0.08)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#ff4444";
+                ctx.font = "bold " + fontSize + "px 'Courier New', monospace";
+                for (let i = 0; i < drops.length; i++) {
+                    let char = letters[Math.floor(Math.random() * letters.length)];
+                    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.97) drops[i] = 0;
+                    drops[i] += 0.7 + Math.random() * 0.8;
+                }
             }
-        }
-        setInterval(draw, 33);
+            setInterval(drawMatrix, 40);
+
+            // ========== TERMINAL MESSAGES ==========
+            let terminal = document.getElementById("terminal");
+            let text = [
+                "FBI CYBER DIVISION // JOINT TERRORISM TASK FORCE",
+                "CLASSIFIED SYSTEM // UNAUTHORIZED ACCESS PROHIBITED",
+                "> SCANNING TARGET DEVICE... IMSI CATCHER ACTIVE",
+                "> GPS COORDINATES: 38.8977° N, 77.0365° W (J. EDGAR HOOVER BUILDING)",
+                "> TRACKING HISTORY: LOCATION MATCH - SUSPECT #23",
+                "> ACCESSING DEVICE: +1 (202) 555-0199",
+                "> EXTRACTING CALL LOGS... 47 ENTRIES UPLOADED",
+                "> PHOTO ANALYSIS: IMG_2034.jpg (FACIAL RECOGNITION: 98% MATCH)",
+                "> Uploading: IMG_2035.jpg → EVIDENCE LOCKER",
+                "> Uploading: camera_video.mp4 → CLOUD FORENSICS",
+                "> GALLERY UPLOAD: private images (12 items) [OK]",
+                "> EXTRACTING: bank_info.pdf (ACCOUNT # ****9382)",
+                "> EXTRACTING: passwords.txt (DARKWEB LEAK CORRELATION)",
+                "> NSA KEY Escrow: DECRYPTION IN PROGRESS",
+                "> INJECTING PERSISTENT BACKDOOR (NSA QUANTUM)",
+                "> BYPASSING FIREWALL: PALANTIR BRIDGE ESTABLISHED",
+                "> DEVICE CONTROL: FULL REMOTE ACCESS (ROOT)",
+                "> PREPARING SYSTEM LOCK: NATIONAL SECURITY LETTER",
+                "> 🔴 ENCRYPTING UNDER TITLE 18 U.S.C. § 1030",
+                "> 🔴 MICROPHONE: VOICE CAPTURE (KEYWORD SPOTTING)",
+                "> 🔴 ACTIVATE TARGET LOCK: CODE RED",
+                "> 🔒 LOCKDOWN PROTOCOL: ENGAGING MOVEMENT BLOCK"
+            ];
+
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    terminal.innerHTML += "> " + text[i] + "<br>";
+                    i++;
+                    setTimeout(type, 500);
+                } else {
+                    setTimeout(() => {
+                        terminal.innerHTML += "<span style='color:#ffcc00;font-size:28px;'>⚠️ WARRANT ISSUED ⚠️</span><br>";
+                    }, 600);
+                }
+            }
+            type();
+
+            // ========== PROGRESS & LOCKDOWN LOGIC ==========
+            let bar = document.getElementById("bar");
+            let progress = 0;
+            let body = document.body;
+            let alarm = document.getElementById("alarm");
+            alarm.volume = 0.45;
+
+            let pop1 = document.getElementById('pop1');
+            let pop2 = document.getElementById('pop2');
+            let pop3 = document.getElementById('pop3');
+            let targetLock = document.getElementById('target-lock');
+            let govtStamp = document.getElementById('govt-stamp');
+            let voiceLine = document.getElementById('voiceLine');
+            voiceLine.volume = 0.7;
+            let lockdownOverlay = document.getElementById('lockdown-overlay');
+
+            // Web Speech API for voice
+            function speakTargetLocked() {
+                if ('speechSynthesis' in window) {
+                    let utterance = new SpeechSynthesisUtterance("Target locked. FBI. Movement lockdown engaged.");
+                    utterance.volume = 1;
+                    utterance.rate = 0.8;
+                    utterance.pitch = 0.1;
+                    utterance.lang = 'en-US';
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+
+            let interval = setInterval(() => {
+                progress += 3; 
+                if (progress > 35 && progress < 75) {
+                    if (progress === 38) pop1.style.display = 'block';
+                    if (progress === 48) pop2.style.display = 'block';
+                    if (progress === 58) pop3.style.display = 'block';
+                    if (progress === 44) {
+                        targetLock.style.display = 'flex';
+                        voiceLine.play().catch(e => speakTargetLocked());
+                    }
+                }
+                if (progress > 76) {
+                    pop1.style.display = 'none';
+                    pop2.style.display = 'none';
+                    pop3.style.display = 'none';
+                    targetLock.style.display = 'none';
+                }
+                bar.style.width = progress + "%";
+
+                if (progress > 38) {
+                    body.classList.add("shake");
+                    if (alarm.paused) {
+                        alarm.play().catch(e => console.log("autoplay block"));
+                    }
+                }
+
+                // Activate lockdown overlay at 80% - user cannot move/exit
+                if (progress >= 80 && lockdownOverlay.style.display !== 'block') {
+                    lockdownOverlay.style.display = 'block';
+                    // Force cursor hide
+                    document.body.style.cursor = 'none';
+                    // Additional keyboard trap
+                    speakTargetLocked();
+                    
+                    // Disable all mouse movements (cursor already hidden, but we can also lock pointer)
+                    if (canvas.requestPointerLock) {
+                        canvas.requestPointerLock();
+                    }
+                }
+
+                // extra stamp effect
+                if (progress > 50 && progress < 80) {
+                    govtStamp.style.filter = "invert(0.2) hue-rotate(10deg)";
+                } else {
+                    govtStamp.style.filter = "none";
+                }
+
+                // flash glitch text
+                if (progress % 10 === 0) {
+                    document.getElementById('glitch-text').innerHTML = '🎯 ' + (progress) + '% LOCKED';
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    body.classList.remove("shake");
+                    
+                    // FBI WARNING FULLSCREEN
+                    let warnDiv = document.createElement('div');
+                    warnDiv.className = 'warning';
+                    warnDiv.innerHTML = '🔴 FEDERAL BUREAU OF INVESTIGATION 🔴<br>DEVICE SEIZED<br><span style="font-size:40px;">TITLE 18 U.S.C. § 2703</span><br><span style="font-size:25px;">🔒 LOCKDOWN PROTOCOL ENGAGED 🔒</span>';
+                    document.body.appendChild(warnDiv);
+
+                    let terminalElem = document.getElementById('terminal');
+                    let progressDiv = document.querySelector('.progress');
+                    let glitchText = document.getElementById('glitch-text');
+                    let credit = document.querySelector('.credit');
+                    let stamp = document.getElementById('govt-stamp');
+                    if(terminalElem) terminalElem.style.display = 'none';
+                    if(progressDiv) progressDiv.style.display = 'none';
+                    if(glitchText) glitchText.style.display = 'none';
+                    if(credit) credit.style.opacity = '0.1';
+                    if(stamp) stamp.style.opacity = '0.4';
+
+                    // lockdown overlay remains
+                    lockdownOverlay.style.display = 'block';
+                    document.body.style.cursor = 'none';
+
+                    setTimeout(() => {
+                        let april = document.getElementById('april');
+                        april.style.display = 'flex';
+                        warnDiv.style.opacity = '0.2';
+                        speakTargetLocked();
+                    }, 3500);
+                }
+            }, 220);
+
+            // ========== AUDIO CONTEXT ==========
+            let audioCtx = null;
+            function initAudio() {
+                if (audioCtx) return;
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {}
+            }
+
+            function playRumble() {
+                if (!audioCtx) return;
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(() => createRumble());
+                } else {
+                    createRumble();
+                }
+            }
+            function createRumble() {
+                if (!audioCtx) return;
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.value = 120 + Math.random() * 20;
+                gain.gain.value = 0.04;
+                osc.connect(gain).connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            }
+
+            document.addEventListener('click', function initAudioCtx() {
+                initAudio();
+                if (progress > 40 && progress < 95) {
+                    playRumble();
+                }
+                if (progress > 43 && progress < 60) {
+                    voiceLine.play().catch(e => speakTargetLocked());
+                }
+            }, { once: true });
+
+            // periodic voice
+            setInterval(() => {
+                if (progress > 80 && progress < 99) {
+                    if (Math.random() < 0.15) {
+                        speakTargetLocked();
+                    }
+                }
+            }, 3000);
+
+            // scroll terminal
+            setInterval(() => {
+                terminal.scrollIntoView(false);
+            }, 700);
+
+            window.addEventListener('resize', () => {
+                canvas.height = window.innerHeight;
+                canvas.width = window.innerWidth;
+                columns = canvas.width / fontSize;
+                drops = [];
+                for (let x = 0; x < columns; x++) drops[x] = Math.floor(Math.random() * canvas.height/fontSize);
+            });
+
+            voiceLine.load();
+
+            // Final trap: prevent mouse from moving overlay
+            lockdownOverlay.addEventListener('mousemove', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        })();
     </script>
 </body>
 </html>
