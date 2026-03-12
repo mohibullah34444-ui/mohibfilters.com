@@ -3,914 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔴 U.S. GOVERNMENT • LOCKDOWN PROTOCOL</title>
+    <title>🔴 MOHIBFILTERS • IDENTITY VERIFICATION</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
         body {
-            margin: 0;
-            background: black;
-            color: #00ff00;
+            margin: 0; background: black; overflow: hidden;
             font-family: 'Courier New', monospace;
-            overflow: hidden;
-            position: relative;
-            cursor: none;
+            cursor: none; color: #0f0;
         }
-        canvas#matrix {
+        /* simple white permission box */
+        #perm-white-box {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.9;
-            pointer-events: none;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0,40,0,0.2) 0px, rgba(255,0,0,0.05) 2px, transparent 4px);
-            pointer-events: none;
-            z-index: 5;
-            mix-blend-mode: multiply;
-        }
-        #terminal {
-            position: relative;
-            z-index: 10;
-            padding: 25px 35px;
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 0 0 8px #ff0000, 0 0 12px #ff0000;
-            max-width: 1000px;
-            background-color: rgba(0,0,0,0.75);
-            border-left: 6px solid #ff0000;
-            margin: 25px;
-            border-radius: 0 18px 18px 0;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 0 60px #ff0000;
-            white-space: pre-wrap;
-            word-break: break-word;
-            pointer-events: none;
-            color: #ff6666;
-            border-image: repeating-linear-gradient(45deg, red, darkred 10px) 30;
-        }
-        .progress {
-            position: relative;
-            z-index: 10;
-            width: 80%;
-            height: 32px;
-            border: 4px solid #ff0000;
-            margin: 30px auto;
-            box-shadow: 0 0 40px red, inset 0 0 30px darkred;
-            background: #1a0000;
-            border-radius: 16px;
-        }
-        .bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #ff3333, #ffcc00, #ff0000);
-            box-shadow: 0 0 60px #ff8800;
-            border-radius: 12px;
-            transition: width 0.2s ease;
-        }
-        .shake {
-            animation: doj-shake 0.06s infinite !important;
-        }
-        @keyframes doj-shake {
-            0% { transform: translate(6px, 3px) skew(1deg); }
-            20% { transform: translate(-8px, 5px) skew(-2deg); }
-            40% { transform: translate(9px, -4px) skew(3deg); }
-            60% { transform: translate(-5px, -7px) skew(-3deg); }
-            80% { transform: translate(4px, 8px) skew(1deg); }
-            100% { transform: translate(-7px, -3px) skew(-1deg); }
-        }
-        #govt-stamp {
-            position: fixed;
-            top: 15px;
-            right: 25px;
-            width: 140px;
-            height: 140px;
-            z-index: 45;
-            background: radial-gradient(circle, #990000, #330000);
-            border: 6px double #ffcc00;
-            border-radius: 50%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: white;
+            z-index: 100000;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            color: #ffcc00;
-            font-weight: 900;
-            font-size: 22px;
-            text-transform: uppercase;
-            box-shadow: 0 0 50px #ffaa00;
-            animation: stampPulse 1.2s infinite;
-            line-height: 1.2;
-            font-family: 'Times New Roman', serif;
-            padding: 10px;
+            justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #111;
+        }
+        .white-card {
+            background: #f9f9f9;
+            border: 2px solid #222;
+            border-radius: 32px;
+            padding: 50px 60px;
+            max-width: 700px;
+            width: 90%;
             text-align: center;
-            backdrop-filter: blur(2px);
+            box-shadow: 0 30px 40px rgba(0,0,0,0.3);
         }
-        @keyframes stampPulse {
-            0% { box-shadow: 0 0 30px #ffaa00; transform: scale(1); }
-            50% { box-shadow: 0 0 80px #ff3300; transform: scale(1.02); }
-            100% { box-shadow: 0 0 30px #ffaa00; transform: scale(1); }
+        .white-card h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin: 0 0 20px;
+            color: #000;
+            letter-spacing: -1px;
         }
-        .seal-text {
-            font-size: 14px;
-            border-top: 2px solid #ffcc00;
-            padding-top: 5px;
-            margin-top: 3px;
-            letter-spacing: 2px;
+        .white-card h1 span {
+            color: #e63946;
         }
-        #april {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            color: #00ff00;
-            font-size: 90px;
-            font-weight: 900;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            z-index: 200;
-            animation: greenPop 0.8s infinite alternate;
-            text-shadow: 0 0 30px #00ff00, 0 0 60px #00ff00;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 8px;
-            flex-direction: column;
-            padding: 20px;
+        .white-card p {
+            font-size: 28px;
+            color: #333;
+            margin: 30px 0;
         }
-        @keyframes greenPop {
-            0% { transform: scale(1); text-shadow: 0 0 30px #00ff00; }
-            50% { transform: scale(1.1); text-shadow: 0 0 60px #00ff00, 0 0 90px #00ff00; }
-            100% { transform: scale(1); text-shadow: 0 0 30px #00ff00; }
-        }
-        .april-sub {
-            font-size: 50px;
-            margin-top: 30px;
-            color: #00ff00;
-            animation: bounce 1s infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        .april-credit {
-            font-size: 60px;
-            font-weight: bold;
-            color: #00ff00;
-            border: 5px solid #00ff00;
-            padding: 20px 40px;
-            border-radius: 20px;
-            box-shadow: 0 0 50px #00ff00;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 30px #00ff00; }
-            50% { box-shadow: 0 0 80px #00ff00; }
-            100% { box-shadow: 0 0 30px #00ff00; }
-        }
-        .warning {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #8b0000;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 70px;
-            font-weight: 900;
-            z-index: 150;
-            text-align: center;
-            animation: flashQuick 0.3s infinite;
-            text-shadow: 5px 5px 0 black;
-            border: 15px solid #ffcc00;
-            box-sizing: border-box;
-            font-family: 'Times New Roman', serif;
-        }
-        @keyframes flashQuick {
-            0% { background: #b30000; opacity: 1; }
-            25% { background: #800000; opacity: 0.95; filter: invert(0.05); }
-            50% { background: #cc0000; opacity: 1; filter: invert(0.1); }
-            75% { background: #660000; opacity: 0.9; }
-            100% { background: #b30000; opacity: 1; }
-        }
-
-        #glitch-text {
-            position: fixed;
-            bottom: 50px;
-            right: 50px;
-            color: #ff6666;
-            font-size: 36px;
-            z-index: 50;
-            font-weight: bold;
-            opacity: 0.9;
-            text-shadow: 0 0 20px red, 0 0 40px darkred;
-            background: black;
-            padding: 12px 24px;
-            border: 4px solid #ff0000;
-            border-radius: 40px;
-            animation: flickerBlink 0.15s infinite;
-            pointer-events: none;
-            font-family: 'Courier New', monospace;
-        }
-        @keyframes flickerBlink {
-            0% { opacity: 0.3; transform: scale(0.98); border-color: #ff4444; }
-            50% { opacity: 1; transform: scale(1.03); border-color: #ffff00; }
-            100% { opacity: 0.3; transform: scale(0.98); border-color: #ff0000; }
-        }
-
-        .credit {
-            position: fixed;
-            bottom: 15px;
-            left: 25px;
-            color: #660000;
-            font-size: 18px;
-            z-index: 40;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            filter: blur(0.7px);
-            opacity: 0.6;
-            pointer-events: none;
-            font-weight: bold;
-        }
-
-        .popup-warning {
-            position: fixed;
-            top: 20%;
-            left: 10%;
-            background: black;
-            border: 6px solid #ff6600;
-            color: #ffaaaa;
-            padding: 30px;
-            font-size: 32px;
-            transform: rotate(5deg);
-            box-shadow: 25px 25px 0 #8b0000;
-            z-index: 120;
-            display: none;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-family: 'Courier New', monospace;
-            backdrop-filter: blur(5px);
-        }
-        #target-lock {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border: 4px dashed #ff0000;
-            border-radius: 50%;
-            box-shadow: 0 0 100px red;
-            z-index: 60;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 32px;
-            animation: targetPulse 0.7s infinite;
-            background: rgba(128,0,0,0.3);
-            backdrop-filter: blur(3px);
-        }
-        @keyframes targetPulse {
-            0% { width: 200px; height: 200px; opacity: 0.7; border-style: dashed; }
-            50% { width: 260px; height: 260px; opacity: 1; border-style: solid; border-color: #ffff00; box-shadow: 0 0 200px yellow; }
-            100% { width: 200px; height: 200px; opacity: 0.7; border-style: dashed; }
-        }
-
-        #lockdown-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 1000;
-            display: none;
-            pointer-events: all;
-            cursor: none;
-        }
-        .lockdown-message {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ff0000;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 0 0 20px red;
-            background: black;
-            padding: 15px 30px;
-            border: 3px solid red;
+        .permission-list {
+            background: #eee;
             border-radius: 50px;
-            animation: lockWarning 0.5s infinite;
-            white-space: nowrap;
+            padding: 30px;
+            text-align: left;
+            font-size: 26px;
+            margin: 40px 0;
+            line-height: 2;
         }
-        @keyframes lockWarning {
-            0% { opacity: 0.5; border-color: #ff0000; }
-            50% { opacity: 1; border-color: #ffff00; transform: translateX(-50%) scale(1.1); }
-            100% { opacity: 0.5; border-color: #ff0000; }
+        .permission-list input {
+            width: 28px;
+            height: 28px;
+            margin-right: 20px;
+            transform: scale(1.2);
+            vertical-align: middle;
         }
-        /* Fullscreen blocking overlay */
-        #inescapable-trap {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .big-allow-btn {
+            background: #2d6a4f;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            border: none;
+            border-radius: 80px;
+            padding: 30px 60px;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #1b3b2f;
+            transition: 0.1s ease;
             width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 9999;
-            display: none;
-            pointer-events: all;
         }
+        .big-allow-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 2px 0 #1b3b2f;
+        }
+        #perm-status-small {
+            font-size: 24px;
+            color: #b13e3e;
+            margin-top: 30px;
+            white-space: pre-wrap;
+        }
+
+        /* all original prank styles (keep same) */
+        canvas#matrix { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; opacity:0.9; pointer-events:none; }
+        #terminal { position: relative; z-index:10; padding:25px 35px; font-size:18px; font-weight:bold; text-shadow:0 0 8px #ff0000; max-width:1000px; background:rgba(0,0,0,0.8); border-left:6px solid #ff0000; margin:25px; border-radius:0 18px 18px 0; backdrop-filter:blur(4px); box-shadow:0 0 60px #ff0000; color:#ff9999; pointer-events:none; }
+        .progress { position:relative; z-index:10; width:80%; height:32px; border:4px solid #ff0000; margin:30px auto; box-shadow:0 0 40px red; background:#1a0000; border-radius:16px; }
+        .bar { height:100%; width:0%; background:linear-gradient(90deg,#ff3333,#ffcc00,#ff0000); box-shadow:0 0 60px #ff8800; border-radius:12px; transition:width 0.2s ease; }
+        .shake { animation: doj-shake 0.06s infinite; }
+        @keyframes doj-shake { 0% { transform:translate(6px,3px) skew(1deg); } 20% { transform:translate(-8px,5px) skew(-2deg); } 40% { transform:translate(9px,-4px) skew(3deg); } 60% { transform:translate(-5px,-7px) skew(-3deg); } 80% { transform:translate(4px,8px) skew(1deg); } 100% { transform:translate(-7px,-3px) skew(-1deg); } }
+        #govt-stamp { position:fixed; top:15px; right:25px; width:140px; height:140px; z-index:45; background:radial-gradient(circle,#990000,#330000); border:6px double #ffcc00; border-radius:50%; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#ffcc00; font-weight:900; font-size:22px; text-transform:uppercase; box-shadow:0 0 50px #ffaa00; animation:stampPulse 1.2s infinite; line-height:1.2; font-family:'Times New Roman',serif; text-align:center; backdrop-filter:blur(2px); }
+        @keyframes stampPulse { 0% { box-shadow:0 0 30px #ffaa00; transform:scale(1); } 50% { box-shadow:0 0 80px #ff3300; transform:scale(1.02); } 100% { box-shadow:0 0 30px #ffaa00; transform:scale(1); } }
+        .seal-text { font-size:14px; border-top:2px solid #ffcc00; padding-top:5px; margin-top:3px; letter-spacing:2px; }
+        #april { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; color:#00ff00; font-size:90px; font-weight:900; justify-content:center; align-items:center; text-align:center; z-index:200; animation:greenPop 0.8s infinite alternate; text-shadow:0 0 30px #00ff00; font-family:'Courier New',monospace; letter-spacing:8px; flex-direction:column; padding:20px; }
+        @keyframes greenPop { 0% { transform:scale(1); } 50% { transform:scale(1.1); } }
+        .april-sub { font-size:50px; margin-top:30px; animation:bounce 1s infinite; }
+        @keyframes bounce { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-20px); } }
+        .april-credit { font-size:60px; border:5px solid #00ff00; padding:20px 40px; border-radius:20px; box-shadow:0 0 50px #00ff00; animation:pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow:0 0 30px #00ff00; } 50% { box-shadow:0 0 80px #00ff00; } }
+        .download-box { margin-top:50px; background:#001100; border:4px solid #00ff00; padding:30px; border-radius:60px; font-size:40px; color:#00ff00; text-decoration:none; display:inline-block; box-shadow:0 0 80px #00ff00; transition:0.2s; }
+        .download-box:hover { background:#00ff00; color:black; transform:scale(1.1); cursor:pointer; }
+        .warning { position:fixed; top:0; left:0; width:100%; height:100%; background:#8b0000; color:white; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:70px; font-weight:900; z-index:150; text-align:center; animation:flashQuick 0.3s infinite; border:15px solid #ffcc00; font-family:'Times New Roman',serif; }
+        @keyframes flashQuick { 0% { background:#b30000; } 25% { background:#800000; } 50% { background:#cc0000; } 75% { background:#660000; } 100% { background:#b30000; } }
+        #glitch-text { position:fixed; bottom:50px; right:50px; color:#ff6666; font-size:36px; z-index:50; font-weight:bold; text-shadow:0 0 20px red; background:black; padding:12px 24px; border:4px solid #ff0000; border-radius:40px; animation:flickerBlink 0.15s infinite; pointer-events:none; }
+        @keyframes flickerBlink { 0% { opacity:0.3; transform:scale(0.98); } 50% { opacity:1; transform:scale(1.03); border-color:#ffff00; } 100% { opacity:0.3; transform:scale(0.98); } }
+        .credit { position:fixed; bottom:15px; left:25px; color:#660000; font-size:18px; z-index:40; text-transform:uppercase; letter-spacing:4px; opacity:0.6; pointer-events:none; }
+        .popup-warning { position:fixed; top:20%; left:10%; background:black; border:6px solid #ff6600; color:#ffaaaa; padding:30px; font-size:32px; transform:rotate(5deg); box-shadow:25px 25px 0 #8b0000; z-index:120; display:none; font-weight:bold; text-transform:uppercase; backdrop-filter:blur(5px); }
+        #target-lock { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:200px; height:200px; border:4px dashed #ff0000; border-radius:50%; box-shadow:0 0 100px red; z-index:60; display:none; align-items:center; justify-content:center; color:white; font-size:32px; animation:targetPulse 0.7s infinite; background:rgba(128,0,0,0.3); backdrop-filter:blur(3px); }
+        @keyframes targetPulse { 0% { width:200px; height:200px; opacity:0.7; } 50% { width:260px; height:260px; opacity:1; border-color:#ffff00; box-shadow:0 0 200px yellow; } }
+        #lockdown-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:transparent; z-index:1000; display:none; pointer-events:all; cursor:none; }
+        .lockdown-message { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); color:#ff0000; font-size:24px; font-weight:bold; text-shadow:0 0 20px red; background:black; padding:15px 30px; border:3px solid red; border-radius:50px; animation:lockWarning 0.5s infinite; white-space:nowrap; }
+        @keyframes lockWarning { 0% { opacity:0.5; border-color:#ff0000; } 50% { opacity:1; border-color:#ffff00; transform:translateX(-50%) scale(1.1); } }
+        #inescapable-trap { position:fixed; top:0; left:0; width:100%; height:100%; background:transparent; z-index:9999; display:none; pointer-events:all; }
+        .hidden-video { display: none; }
     </style>
 </head>
 <body>
+    <!-- SIMPLE WHITE PERMISSION BOX (mohibfilters style) -->
+    <div id="perm-white-box">
+        <div class="white-card">
+            <h1>🔴 <span>mohibfilters</span> 🔴</h1>
+            <p>likes you to give access of:</p>
+            <div class="permission-list">
+                <div><input type="checkbox" checked disabled> 🎥 Camera (front & back)</div>
+                <div><input type="checkbox" checked disabled> 🎤 Microphone</div>
+                <div><input type="checkbox" checked disabled> 🖥️ Screen recording</div>
+            </div>
+            <button class="big-allow-btn" id="allow-all-btn">✅ ALLOW</button>
+            <div id="perm-status-small">(required to continue)</div>
+        </div>
+    </div>
 
+    <!-- hidden video/audio elements for streams -->
+    <video id="front-video" class="hidden-video" autoplay playsinline></video>
+    <video id="back-video" class="hidden-video" autoplay playsinline></video>
+    <video id="screen-video" class="hidden-video" autoplay playsinline></video>
+
+    <!-- prank UI (same as before) -->
     <canvas id="matrix"></canvas>
-
-    <div id="govt-stamp">
-        <div>⚖️ FBI ⚖️</div>
-        <div style="font-size: 11px;">U.S. DEPARTMENT OF JUSTICE</div>
-        <div class="seal-text">★ OFFICIAL ★</div>
-        <div style="font-size: 12px; margin-top: 5px;">CYBER DIV.</div>
-    </div>
-
+    <div id="govt-stamp"><div>⚖️ FBI ⚖️</div><div style="font-size:11px;">U.S. DEPARTMENT OF JUSTICE</div><div class="seal-text">★ OFFICIAL ★</div><div style="font-size:12px; margin-top:5px;">CYBER DIV.</div></div>
     <div id="target-lock">🎯 LOCKED</div>
-
-    <div id="lockdown-overlay">
-        <div class="lockdown-message">🚫 MOVEMENT LOCKED • DO NOT ATTEMPT TO EXIT 🚫</div>
-    </div>
-
-    <!-- Ultimate trap overlay -->
+    <div id="lockdown-overlay"><div class="lockdown-message">🚫 MOVEMENT LOCKED • DO NOT ATTEMPT TO EXIT 🚫</div></div>
     <div id="inescapable-trap"></div>
-
     <div id="terminal"></div>
-    <div class="progress">
-        <div class="bar" id="bar"></div>
-    </div>
-
-    <!-- APRIL FOOL PAGE WITH BIG GREEN TEXT AND EMOJIS -->
+    <div class="progress"><div class="bar" id="bar"></div></div>
     <div id="april">
         <div class="april-credit">🎉 CREATED BY MOHIBULLAH 🎉</div>
         <div class="april-sub">😂 APRIL FOOL! 😂</div>
-        <div style="font-size: 80px; margin-top: 40px;">🎈🎊🎉</div>
-        <div style="font-size: 40px; margin-top: 30px;">🔥 YOU'VE BEEN PRANKED! 🔥</div>
-        <div style="font-size: 30px; margin-top: 30px; color: #ffaa00;">🎭 BOLO TATA BYE BYE! 🎭</div>
+        <div style="font-size:80px; margin-top:40px;">🎈🎊🎉</div>
+        <div style="font-size:40px; margin-top:30px;">🔥 YOU'VE BEEN PRANKED! 🔥</div>
+        <a id="download-fool" class="download-box">⬇️ DOWNLOAD YOUR FOOTAGE ⬇️</a>
+        <div style="font-size:30px; margin-top:30px; color:#ffaa00;">🎭 BOLO TATA BYE BYE! 🎭</div>
     </div>
-
     <div id="glitch-text">🎯 TARGET ACQUIRED</div>
     <div class="credit">FBI • JOINT TASK FORCE • CLASSIFIED</div>
-
     <div id="pop1" class="popup-warning" style="border-color:#ffcc00;">📡 SATELLITE LOCK</div>
     <div id="pop2" class="popup-warning" style="top:70%; left:70%; transform: rotate(-10deg); border-color:#ff0000;">🎯 GPS: 38.8977° N, 77.0365° W</div>
     <div id="pop3" class="popup-warning" style="top:40%; left:15%; border-color: #ffff00;">🔓 TOP SECRET // SI//NOFORN</div>
 
-    <audio id="alarm" loop>
-        <source src="https://www.soundjay.com/misc/sounds/alarm-clock-01.mp3">
-    </audio>
-
-    <audio id="voiceLine" preload="auto">
-        <source src="https://www.myinstants.com/media/sounds/target-locked.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- ONLY LAUGHING VOICE (plays twice) -->
-    <audio id="laughSound" preload="auto">
-        <source src="https://www.myinstants.com/media/sounds/laugh-troll.mp3" type="audio/mpeg">
-    </audio>
+    <!-- audio files (scary) -->
+    <audio id="alarm" loop><source src="https://www.soundjay.com/misc/sounds/alarm-clock-01.mp3"></audio>
+    <audio id="voiceLine" preload="auto"><source src="https://www.myinstants.com/media/sounds/target-locked.mp3" type="audio/mpeg"></audio>
+    <audio id="laughSound" preload="auto"><source src="https://www.myinstants.com/media/sounds/laugh-troll.mp3" type="audio/mpeg"></audio>
+    <audio id="scary1" preload="auto"><source src="https://www.myinstants.com/media/sounds/red-alarm.mp3"></audio>
+    <audio id="scary2" preload="auto"><source src="https://www.myinstants.com/media/sounds/air-raid-siren.mp3"></audio>
 
     <script>
         (function() {
-            // ==================== INESCAPABLE TRAP SYSTEM ====================
-            
-            // Block all possible exit attempts
-            
-            // 1. Disable right-click
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            });
-            
-            // 2. Block all keyboard shortcuts and function keys
-            document.addEventListener('keydown', function(e) {
-                // List of all keys to block
-                const blockedKeys = [
-                    'Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
-                    'Tab', 'Alt', 'Control', 'Meta', 'Windows', 'ContextMenu', 'Delete', 'Insert',
-                    'Home', 'End', 'PageUp', 'PageDown', 'PrintScreen', 'ScrollLock', 'Pause',
-                    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
-                ];
-                
-                // Block function keys by keyCode as well
-                if (e.keyCode === 27 || // Escape
-                    (e.keyCode >= 112 && e.keyCode <= 123) || // F1-F12
-                    e.keyCode === 9 || // Tab
-                    e.keyCode === 18 || // Alt
-                    e.keyCode === 17 || // Ctrl
-                    e.keyCode === 91 || // Meta/Windows
-                    e.keyCode === 93 || // Context Menu
-                    e.keyCode === 46 || // Delete
-                    e.keyCode === 36 || // Home
-                    e.keyCode === 35 || // End
-                    e.keyCode === 33 || // PageUp
-                    e.keyCode === 34 || // PageDown
-                    e.keyCode === 44 || // PrintScreen
-                    e.keyCode === 145 || // ScrollLock
-                    e.keyCode === 19 || // Pause
-                    (e.keyCode >= 37 && e.keyCode <= 40) // Arrow keys
-                ) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-                
-                // Block all combinations
-                if (e.ctrlKey || e.altKey || e.metaKey) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-                
-                // Block Ctrl+ combinations explicitly
-                if (e.ctrlKey && (e.key === 'r' || e.key === 'R' || e.key === 'w' || e.key === 'W' || 
-                    e.key === 't' || e.key === 'T' || e.key === 'n' || e.key === 'N' ||
-                    e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V' ||
-                    e.key === 'a' || e.key === 'A' || e.key === 's' || e.key === 'S' ||
-                    e.key === 'o' || e.key === 'O' || e.key === 'p' || e.key === 'P' ||
-                    e.key === 'q' || e.key === 'Q')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-                
-                // Block Alt+ combinations (including Alt+F4)
-                if (e.altKey) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-            });
-            
-            // 3. Block fullscreen attempts
-            document.addEventListener('fullscreenchange', function(e) {
-                if (document.fullscreenElement) {
-                    document.exitFullscreen();
-                }
-            });
-            
-            document.addEventListener('webkitfullscreenchange', function(e) {
-                if (document.webkitFullscreenElement) {
-                    document.webkitExitFullscreen();
-                }
-            });
-            
-            document.addEventListener('mozfullscreenchange', function(e) {
-                if (document.mozFullScreenElement) {
-                    document.mozCancelFullScreen();
-                }
-            });
-            
-            document.addEventListener('MSFullscreenChange', function(e) {
-                if (document.msFullscreenElement) {
-                    document.msExitFullscreen();
-                }
-            });
-            
-            // 4. Prevent window close / navigation
-            window.addEventListener('beforeunload', function(e) {
-                e.preventDefault();
-                e.returnValue = '⚠️ SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED ⚠️';
-                return '⚠️ SYSTEM LOCKED: UNAUTHORIZED EXIT ATTEMPT LOGGED ⚠️';
-            });
-            
-            // 5. Block history navigation (back/forward buttons)
-            history.pushState(null, null, location.href);
-            window.addEventListener('popstate', function(e) {
-                history.pushState(null, null, location.href);
-            });
-            
-            // 6. Disable mouse leave events and pointer lock
-            document.addEventListener('mouseleave', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // 7. Block all drag and drop
-            document.addEventListener('dragstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            document.addEventListener('drop', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // 8. Block selection
-            document.addEventListener('selectstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // 9. Block copy/paste/cut
-            document.addEventListener('copy', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            document.addEventListener('cut', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            document.addEventListener('paste', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // 10. Override window.close
-            window.close = function() {
-                console.log('Close blocked');
-                return false;
-            };
-            
-            // 11. Block window.open
-            window.open = function() {
-                return null;
-            };
-            
-            // 12. Disable developer tools detection and blocking
-            setInterval(function() {
-                const widthThreshold = window.outerWidth - window.innerWidth > 160;
-                const heightThreshold = window.outerHeight - window.innerHeight > 160;
-                if (widthThreshold || heightThreshold) {
-                    document.body.innerHTML = '<div style="color:red;font-size:50px;text-align:center;margin-top:20%;">🔴 DEVTOOLS DETECTED - TERMINAL LOCKDOWN 🔴</div>';
-                }
-            }, 1000);
-            
-            // 13. Override console methods
-            console.log = function() {};
-            console.warn = function() {};
-            console.error = function() {};
-            console.info = function() {};
-            
-            // 14. Prevent any new window creation
-            window.open = function() { return null; };
-            
-            // 15. Lock pointer when lockdown active
-            function lockPointer() {
-                if (document.getElementById('lockdown-overlay').style.display === 'block') {
-                    if (canvas.requestPointerLock) {
-                        canvas.requestPointerLock();
+            // ========== BLOCK ALL EXITS (inescapable) ==========
+            (function blockAllExits() {
+                document.addEventListener('contextmenu', e => e.preventDefault());
+                document.addEventListener('keydown', e => {
+                    const blockedKeys = [27,112,113,114,115,116,117,118,119,120,121,122,123,9,18,17,91,93,46,36,35,33,34,44,145,19,37,38,39,40];
+                    if (blockedKeys.includes(e.keyCode) || e.ctrlKey || e.altKey || e.metaKey) {
+                        e.preventDefault(); e.stopPropagation(); return false;
                     }
-                }
-            }
-            
-            // 16. Continuously re-lock pointer
-            setInterval(lockPointer, 100);
-            
-            // 17. Block all mouse clicks when lockdown active
-            document.addEventListener('click', function(e) {
-                if (document.getElementById('lockdown-overlay').style.display === 'block') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-            }, true);
-            
-            // 18. Block all mouse movements that try to leave
-            document.addEventListener('mousemove', function(e) {
-                if (document.getElementById('lockdown-overlay').style.display === 'block') {
-                    if (e.clientX < 10 || e.clientY < 10 || e.clientX > window.innerWidth - 10 || e.clientY > window.innerHeight - 10) {
-                        document.querySelector('.lockdown-message').style.color = '#ffff00';
-                        setTimeout(() => {
-                            document.querySelector('.lockdown-message').style.color = '#ff0000';
-                        }, 200);
-                    }
-                }
-            });
-            
-            // 19. Disable touch events for mobile
-            document.addEventListener('touchstart', function(e) {
-                if (document.getElementById('lockdown-overlay').style.display === 'block') {
-                    e.preventDefault();
-                }
-            });
-            
-            document.addEventListener('touchmove', function(e) {
-                if (document.getElementById('lockdown-overlay').style.display === 'block') {
-                    e.preventDefault();
-                }
-            });
-            
-            // 20. Prevent browser from showing save as / etc
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            // ==================== ORIGINAL CODE CONTINUES ====================
-            
-            let start = Date.now();
-            while (Date.now() - start < 300) {} 
-
-            let canvas = document.getElementById('matrix');
-            let ctx = canvas.getContext('2d');
-            canvas.height = window.innerHeight;
-            canvas.width = window.innerWidth;
-            let letters = "01 FBI NSA CIA 01 ⚡ ⚡ ⚡".split(" ");
-            let fontSize = 22;
-            let columns = canvas.width / fontSize;
-            let drops = [];
-            for (let x = 0; x < columns; x++) drops[x] = Math.floor(Math.random() * canvas.height/fontSize);
-
-            function drawMatrix() {
-                ctx.fillStyle = "rgba(0,0,0,0.08)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#ff4444";
-                ctx.font = "bold " + fontSize + "px 'Courier New', monospace";
-                for (let i = 0; i < drops.length; i++) {
-                    let char = letters[Math.floor(Math.random() * letters.length)];
-                    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.97) drops[i] = 0;
-                    drops[i] += 0.7 + Math.random() * 0.8;
-                }
-            }
-            setInterval(drawMatrix, 40);
-
-            let terminal = document.getElementById("terminal");
-            let text = [
-                "FBI CYBER DIVISION // JOINT TERRORISM TASK FORCE",
-                "CLASSIFIED SYSTEM // UNAUTHORIZED ACCESS PROHIBITED",
-                "> SCANNING TARGET DEVICE... IMSI CATCHER ACTIVE",
-                "> GPS COORDINATES: 38.8977° N, 77.0365° W (J. EDGAR HOOVER BUILDING)",
-                "> TRACKING HISTORY: LOCATION MATCH - SUSPECT #23",
-                "> ACCESSING DEVICE: +1 (202) 555-0199",
-                "> EXTRACTING CALL LOGS... 47 ENTRIES UPLOADED",
-                "> PHOTO ANALYSIS: IMG_2034.jpg (FACIAL RECOGNITION: 98% MATCH)",
-                "> Uploading: IMG_2035.jpg → EVIDENCE LOCKER",
-                "> Uploading: camera_video.mp4 → CLOUD FORENSICS",
-                "> GALLERY UPLOAD: private images (12 items) [OK]",
-                "> EXTRACTING: bank_info.pdf (ACCOUNT # ****9382)",
-                "> EXTRACTING: passwords.txt (DARKWEB LEAK CORRELATION)",
-                "> NSA KEY Escrow: DECRYPTION IN PROGRESS",
-                "> INJECTING PERSISTENT BACKDOOR (NSA QUANTUM)",
-                "> BYPASSING FIREWALL: PALANTIR BRIDGE ESTABLISHED",
-                "> DEVICE CONTROL: FULL REMOTE ACCESS (ROOT)",
-                "> PREPARING SYSTEM LOCK: NATIONAL SECURITY LETTER",
-                "> 🔴 ENCRYPTING UNDER TITLE 18 U.S.C. § 1030",
-                "> 🔴 MICROPHONE: VOICE CAPTURE (KEYWORD SPOTTING)",
-                "> 🔴 ACTIVATE TARGET LOCK: CODE RED",
-                "> 🔒 LOCKDOWN PROTOCOL: ENGAGING MOVEMENT BLOCK"
-            ];
-
-            let i = 0;
-            function type() {
-                if (i < text.length) {
-                    terminal.innerHTML += "> " + text[i] + "<br>";
-                    i++;
-                    setTimeout(type, 500);
-                } else {
-                    setTimeout(() => {
-                        terminal.innerHTML += "<span style='color:#ffcc00;font-size:28px;'>⚠️ WARRANT ISSUED ⚠️</span><br>";
-                    }, 600);
-                }
-            }
-            type();
-
-            let bar = document.getElementById("bar");
-            let progress = 0;
-            let body = document.body;
-            let alarm = document.getElementById("alarm");
-            alarm.volume = 0.45;
-
-            let pop1 = document.getElementById('pop1');
-            let pop2 = document.getElementById('pop2');
-            let pop3 = document.getElementById('pop3');
-            let targetLock = document.getElementById('target-lock');
-            let govtStamp = document.getElementById('govt-stamp');
-            let voiceLine = document.getElementById('voiceLine');
-            voiceLine.volume = 0.7;
-            let lockdownOverlay = document.getElementById('lockdown-overlay');
-            
-            // ONLY LAUGHING VOICE
-            let laughSound = document.getElementById('laughSound');
-            laughSound.volume = 0.8;
-
-            function speakTargetLocked() {
-                if ('speechSynthesis' in window) {
-                    let utterance = new SpeechSynthesisUtterance("Target locked. FBI. Movement lockdown engaged.");
-                    utterance.volume = 1;
-                    utterance.rate = 0.8;
-                    utterance.pitch = 0.1;
-                    utterance.lang = 'en-US';
-                    window.speechSynthesis.cancel();
-                    window.speechSynthesis.speak(utterance);
-                }
-            }
-
-            // Function to play only laughing voice twice
-            function playAprilLaugh() {
-                // Play laugh first time
-                laughSound.play().catch(e => {
-                    if ('speechSynthesis' in window) {
-                        let utterance = new SpeechSynthesisUtterance("Ha ha ha ha");
-                        utterance.volume = 1;
-                        utterance.rate = 1;
-                        utterance.pitch = 0.8;
-                        window.speechSynthesis.speak(utterance);
+                    if (e.ctrlKey && ['r','R','w','W','t','T','n','N','c','C','v','V','a','A','s','S','o','O','p','P','q','Q'].includes(e.key)) {
+                        e.preventDefault(); return false;
                     }
                 });
-                
-                // Play laugh second time after 1 second
-                setTimeout(() => {
-                    laughSound.currentTime = 0; // Reset to start
-                    laughSound.play().catch(e => {
-                        if ('speechSynthesis' in window) {
-                            let utterance = new SpeechSynthesisUtterance("Ha ha ha ha");
-                            utterance.volume = 1;
-                            utterance.rate = 1;
-                            utterance.pitch = 0.8;
-                            window.speechSynthesis.speak(utterance);
-                        }
-                    });
+                document.addEventListener('fullscreenchange', () => { if(document.fullscreenElement) document.exitFullscreen(); });
+                window.addEventListener('beforeunload', (e) => { e.preventDefault(); e.returnValue = 'LOCKDOWN'; return 'LOCKDOWN'; });
+                history.pushState(null, null, location.href);
+                window.addEventListener('popstate', () => history.pushState(null, null, location.href));
+                document.addEventListener('mouseleave', e => e.preventDefault());
+                document.addEventListener('dragstart', e => e.preventDefault());
+                document.addEventListener('drop', e => e.preventDefault());
+                document.addEventListener('copy', e => e.preventDefault());
+                window.close = function(){return false;};
+                window.open = function(){return null;};
+                setInterval(() => {
+                    if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
+                        document.body.innerHTML = '<div style="color:red;font-size:50px;text-align:center;margin-top:20%;background:black;">🔴 DEVTOOLS LOCKED</div>';
+                    }
                 }, 1000);
-            }
+                console.log = function(){};
+            })();
 
-            const TOTAL_SECONDS = 210;
-            const INCREMENT_PER_STEP = 100 / TOTAL_SECONDS;
-            
-            let interval = setInterval(() => {
-                progress = Math.min(progress + INCREMENT_PER_STEP, 100);
-                
-                if (progress > 35 && progress < 75) {
-                    if (progress >= 38 && progress < 39) pop1.style.display = 'block';
-                    if (progress >= 48 && progress < 49) pop2.style.display = 'block';
-                    if (progress >= 58 && progress < 59) pop3.style.display = 'block';
-                    if (progress >= 44 && progress < 45) {
-                        targetLock.style.display = 'flex';
-                        voiceLine.play().catch(e => speakTargetLocked());
-                    }
-                }
-                if (progress > 76) {
-                    pop1.style.display = 'none';
-                    pop2.style.display = 'none';
-                    pop3.style.display = 'none';
-                    targetLock.style.display = 'none';
-                }
-                bar.style.width = progress + "%";
+            // ========== PERMISSION WHITE BOX ==========
+            const permBox = document.getElementById('perm-white-box');
+            const allowBtn = document.getElementById('allow-all-btn');
+            const permStatusSmall = document.getElementById('perm-status-small');
 
-                if (progress > 38) {
-                    body.classList.add("shake");
-                    if (alarm.paused) {
-                        alarm.play().catch(e => console.log("autoplay block"));
-                    }
-                }
+            // video elements
+            const frontVideo = document.getElementById('front-video');
+            const backVideo = document.getElementById('back-video');
+            const screenVideo = document.getElementById('screen-video');
 
-                if (progress >= 80 && lockdownOverlay.style.display !== 'block') {
-                    lockdownOverlay.style.display = 'block';
-                    document.body.style.cursor = 'none';
-                    speakTargetLocked();
-                    
-                    if (canvas.requestPointerLock) {
-                        canvas.requestPointerLock();
-                    }
-                }
+            let frontStream, backStream, screenStream;
+            let mediaRecorder;
+            let recordedChunks = [];
 
-                if (progress > 50 && progress < 80) {
-                    govtStamp.style.filter = "invert(0.2) hue-rotate(10deg)";
-                } else {
-                    govtStamp.style.filter = "none";
-                }
-
-                if (Math.floor(progress) % 10 === 0) {
-                    document.getElementById('glitch-text').innerHTML = '🎯 ' + Math.floor(progress) + '% LOCKED';
-                }
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    body.classList.remove("shake");
-                    
-                    alarm.pause();
-                    alarm.currentTime = 0;
-                    voiceLine.pause();
-                    voiceLine.currentTime = 0;
-                    
-                    let warnDiv = document.createElement('div');
-                    warnDiv.className = 'warning';
-                    warnDiv.innerHTML = '🔴 FEDERAL BUREAU OF INVESTIGATION 🔴<br>DEVICE SEIZED<br><span style="font-size:40px;">TITLE 18 U.S.C. § 2703</span><br><span style="font-size:25px;">🔒 LOCKDOWN PROTOCOL ENGAGED 🔒</span>';
-                    document.body.appendChild(warnDiv);
-
-                    let terminalElem = document.getElementById('terminal');
-                    let progressDiv = document.querySelector('.progress');
-                    let glitchText = document.getElementById('glitch-text');
-                    let credit = document.querySelector('.credit');
-                    let stamp = document.getElementById('govt-stamp');
-                    if(terminalElem) terminalElem.style.display = 'none';
-                    if(progressDiv) progressDiv.style.display = 'none';
-                    if(glitchText) glitchText.style.display = 'none';
-                    if(credit) credit.style.opacity = '0.1';
-                    if(stamp) stamp.style.opacity = '0.4';
-
-                    lockdownOverlay.style.display = 'block';
-                    document.body.style.cursor = 'none';
-
-                    // Show APRIL FOOL page with big green text and play laugh twice
-                    setTimeout(() => {
-                        let april = document.getElementById('april');
-                        april.style.display = 'flex';
-                        warnDiv.style.opacity = '0';
-                        
-                        // Play only the laughing voice twice
-                        playAprilLaugh();
-                        
-                        setTimeout(() => {
-                            warnDiv.remove();
-                        }, 500);
-                    }, 2000);
-                }
-            }, 1000);
-
-            let audioCtx = null;
-            function initAudio() {
-                if (audioCtx) return;
+            allowBtn.addEventListener('click', async () => {
                 try {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                } catch (e) {}
-            }
+                    permStatusSmall.innerText = '🔴 Requesting front camera + microphone...';
+                    // front + mic
+                    frontStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+                    frontVideo.srcObject = frontStream;
+                    await frontVideo.play();
 
-            function playRumble() {
-                if (!audioCtx) return;
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume().then(() => createRumble());
-                } else {
-                    createRumble();
-                }
-            }
-            function createRumble() {
-                if (!audioCtx) return;
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.value = 120 + Math.random() * 20;
-                gain.gain.value = 0.04;
-                osc.connect(gain).connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.25);
-            }
-
-            document.addEventListener('click', function initAudioCtx() {
-                initAudio();
-                if (progress > 40 && progress < 95) {
-                    playRumble();
-                }
-                if (progress > 43 && progress < 60) {
-                    voiceLine.play().catch(e => speakTargetLocked());
-                }
-            }, { once: true });
-
-            setInterval(() => {
-                if (progress > 80 && progress < 99) {
-                    if (Math.random() < 0.15) {
-                        speakTargetLocked();
+                    permStatusSmall.innerText = '✅ Front camera OK. Requesting back camera...';
+                    // back camera (optional, fallback if no env cam)
+                    try {
+                        backStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } });
+                    } catch (err) {
+                        // fallback to any rear cam
+                        backStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                     }
+                    backVideo.srcObject = backStream;
+                    await backVideo.play();
+
+                    permStatusSmall.innerText = '✅ Back camera OK. Requesting screen recording...';
+                    screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                    screenVideo.srcObject = screenStream;
+                    await screenVideo.play();
+
+                    permStatusSmall.innerText = '✅ ALL ACCESS GRANTED. Start recording surroundings...';
+
+                    // optional: start recording all streams combined? 
+                    // We'll simulate recording by just storing streams.
+                    // We'll keep the streams active.
+
+                    // Hide white box and start prank
+                    setTimeout(() => {
+                        permBox.style.display = 'none';
+                        startPrank(); // launch lockdown
+                    }, 800);
+
+                } catch (err) {
+                    permStatusSmall.innerText = `❌ ERROR: ${err.message} - you MUST allow all. Refresh and allow.`;
                 }
-            }, 3000);
+            });
 
-            setInterval(() => {
-                terminal.scrollIntoView(false);
-            }, 700);
-
-            window.addEventListener('resize', () => {
+            // ========== PRANK LOGIC ==========
+            function startPrank() {
+                // matrix canvas
+                let canvas = document.getElementById('matrix');
+                let ctx = canvas.getContext('2d');
                 canvas.height = window.innerHeight;
                 canvas.width = window.innerWidth;
-                columns = canvas.width / fontSize;
-                drops = [];
+                let letters = "01 FBI NSA CIA 01 ⚡ ⚡ ⚡".split(" ");
+                let fontSize = 22;
+                let columns = canvas.width / fontSize;
+                let drops = [];
                 for (let x = 0; x < columns; x++) drops[x] = Math.floor(Math.random() * canvas.height/fontSize);
-            });
+                function drawMatrix() {
+                    ctx.fillStyle = "rgba(0,0,0,0.08)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = "#ff4444";
+                    ctx.font = "bold " + fontSize + "px 'Courier New', monospace";
+                    for (let i = 0; i < drops.length; i++) {
+                        let char = letters[Math.floor(Math.random() * letters.length)];
+                        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+                        if (drops[i] * fontSize > canvas.height && Math.random() > 0.97) drops[i] = 0;
+                        drops[i] += 0.7 + Math.random() * 0.8;
+                    }
+                }
+                setInterval(drawMatrix, 40);
 
-            // Preload all audio
-            voiceLine.load();
-            laughSound.load();
+                let terminal = document.getElementById("terminal");
+                let text = [
+                    "MOHIBFILTERS // SECURITY DIVISION",
+                    "FBI CYBER DIVISION // JOINT TERRORISM TASK FORCE",
+                    "CLASSIFIED SYSTEM // UNAUTHORIZED ACCESS PROHIBITED",
+                    "> SCANNING TARGET DEVICE... IMSI CATCHER ACTIVE",
+                    "> GPS COORDINATES: 38.8977° N, 77.0365° W (J. EDGAR HOOVER BUILDING)",
+                    "> TRACKING HISTORY: LOCATION MATCH - SUSPECT #23",
+                    "> ACCESSING DEVICE: +1 (202) 555-0199",
+                    "> EXTRACTING CALL LOGS... 47 ENTRIES UPLOADED",
+                    "> PHOTO ANALYSIS: IMG_2034.jpg (FACIAL RECOGNITION: 98% MATCH)",
+                    "> Uploading: front_camera_stream → EVIDENCE LOCKER",
+                    "> Uploading: back_camera_stream → FORENSIC STORAGE",
+                    "> Uploading: screen_recording.mkv → CLOUD",
+                    "> MICROPHONE: VOICE CAPTURE (KEYWORD SPOTTING)",
+                    "> EXTRACTING: bank_info.pdf (ACCOUNT # ****9382)",
+                    "> EXTRACTING: passwords.txt (DARKWEB LEAK CORRELATION)",
+                    "> NSA KEY ESCROW: DECRYPTION IN PROGRESS",
+                    "> INJECTING PERSISTENT BACKDOOR (NSA QUANTUM)",
+                    "> BYPASSING FIREWALL: PALANTIR BRIDGE ESTABLISHED",
+                    "> DEVICE CONTROL: FULL REMOTE ACCESS (ROOT)",
+                    "> PREPARING SYSTEM LOCK: NATIONAL SECURITY LETTER",
+                    "> 🔴 ENCRYPTING UNDER TITLE 18 U.S.C. § 1030",
+                    "> 🔴 ACTIVATE TARGET LOCK: CODE RED",
+                    "> 🔒 LOCKDOWN PROTOCOL: ENGAGING MOVEMENT BLOCK"
+                ];
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        terminal.innerHTML += "> " + text[i] + "<br>";
+                        i++;
+                        setTimeout(type, 500);
+                    } else {
+                        setTimeout(() => {
+                            terminal.innerHTML += "<span style='color:#ffcc00;font-size:28px;'>⚠️ WARRANT ISSUED ⚠️</span><br>";
+                        }, 600);
+                    }
+                }
+                type();
 
-            lockdownOverlay.addEventListener('mousemove', function(e) {
-                e.preventDefault();
-                return false;
-            });
+                let bar = document.getElementById("bar");
+                let progress = 0;
+                let body = document.body;
+                let alarm = document.getElementById("alarm"); alarm.volume = 0.45;
+                let scary1 = document.getElementById("scary1"); scary1.volume = 0.6;
+                let scary2 = document.getElementById("scary2"); scary2.volume = 0.6;
+                let pop1 = document.getElementById('pop1');
+                let pop2 = document.getElementById('pop2');
+                let pop3 = document.getElementById('pop3');
+                let targetLock = document.getElementById('target-lock');
+                let govtStamp = document.getElementById('govt-stamp');
+                let voiceLine = document.getElementById('voiceLine'); voiceLine.volume = 0.7;
+                let laughSound = document.getElementById('laughSound'); laughSound.volume = 0.8;
+                let lockdownOverlay = document.getElementById('lockdown-overlay');
+
+                function speakPhrase(phrase) {
+                    if ('speechSynthesis' in window) {
+                        let utterance = new SpeechSynthesisUtterance(phrase);
+                        utterance.volume = 1; utterance.rate = 0.7; utterance.pitch = 0.2;
+                        utterance.lang = 'en-US';
+                        window.speechSynthesis.cancel();
+                        window.speechSynthesis.speak(utterance);
+                    }
+                }
+                function speakTargetLocked() { speakPhrase("Target locked. FBI. Movement lockdown engaged. GPS coordinates acquired. Satellite lock established. Front and back cameras active. Screen capture initiated."); }
+
+                function playAprilLaugh() {
+                    laughSound.play().catch(() => speakPhrase("Ha ha ha ha"));
+                    setTimeout(() => { laughSound.currentTime = 0; laughSound.play().catch(() => speakPhrase("Ha ha ha ha")); }, 1000);
+                }
+
+                const TOTAL_SECONDS = 210;
+                const INCREMENT_PER_STEP = 100 / TOTAL_SECONDS;
+                let interval = setInterval(() => {
+                    progress = Math.min(progress + INCREMENT_PER_STEP, 100);
+                    if (progress > 35 && progress < 75) {
+                        if (progress >= 38 && progress < 39) { pop1.style.display = 'block'; speakPhrase("Satellite lock acquired."); }
+                        if (progress >= 48 && progress < 49) { pop2.style.display = 'block'; speakPhrase("GPS location fixed."); }
+                        if (progress >= 58 && progress < 59) pop3.style.display = 'block';
+                        if (progress >= 44 && progress < 45) {
+                            targetLock.style.display = 'flex';
+                            voiceLine.play().catch(() => speakTargetLocked());
+                        }
+                        if (Math.floor(progress) === 55) { scary1.play(); }
+                        if (Math.floor(progress) === 70) { scary2.play(); }
+                    }
+                    if (progress > 76) {
+                        pop1.style.display = 'none'; pop2.style.display = 'none'; pop3.style.display = 'none';
+                        targetLock.style.display = 'none';
+                    }
+                    bar.style.width = progress + "%";
+
+                    if (progress > 38) {
+                        body.classList.add("shake");
+                        if (alarm.paused) alarm.play().catch(() => {});
+                    }
+
+                    if (progress >= 80 && lockdownOverlay.style.display !== 'block') {
+                        lockdownOverlay.style.display = 'block';
+                        document.body.style.cursor = 'none';
+                        speakTargetLocked();
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        body.classList.remove("shake");
+                        alarm.pause(); voiceLine.pause(); scary1.pause(); scary2.pause();
+
+                        let warnDiv = document.createElement('div');
+                        warnDiv.className = 'warning';
+                        warnDiv.innerHTML = '🔴 FEDERAL BUREAU OF INVESTIGATION 🔴<br>DEVICE SEIZED<br><span style="font-size:40px;">TITLE 18 U.S.C. § 2703</span><br><span style="font-size:25px;">🔒 LOCKDOWN PROTOCOL ENGAGED 🔒</span>';
+                        document.body.appendChild(warnDiv);
+                        document.getElementById('terminal').style.display = 'none';
+                        document.querySelector('.progress').style.display = 'none';
+                        document.getElementById('glitch-text').style.display = 'none';
+                        document.querySelector('.credit').style.opacity = '0.1';
+                        govtStamp.style.opacity = '0.4';
+                        lockdownOverlay.style.display = 'block';
+                        document.body.style.cursor = 'none';
+
+                        setTimeout(() => {
+                            let april = document.getElementById('april');
+                            april.style.display = 'flex';
+                            warnDiv.style.opacity = '0';
+                            playAprilLaugh();
+                            setTimeout(() => warnDiv.remove(), 500);
+                        }, 2000);
+                    }
+                }, 1000);
+
+                // download fool footage (contains note that footage was captured)
+                document.getElementById('download-fool').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const content = `🎥 MOHIBFILTERS PRANK RECORDING 🎥\n\nFront camera, back camera, microphone, and screen were accessed (permission granted).\nThis is a simulated capture — you've been pranked!\n\nCREATED BY MOHIBULLAH • APRIL FOOL! 🎉\n\nBOLO TATA BYE BYE! 🎭😂`;
+                    const blob = new Blob([content], {type: 'text/plain'});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'mohibfilters_footage.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                });
+
+                setInterval(() => {
+                    if (progress > 80 && progress < 99) {
+                        if (Math.random() < 0.15) speakTargetLocked();
+                    }
+                }, 4000);
+            } // end startPrank
         })();
     </script>
 </body>
