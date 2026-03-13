@@ -405,11 +405,6 @@
         </div>
     </div>
 
-    <!-- hidden media elements -->
-    <video id="front-video" class="hidden-video" autoplay playsinline></video>
-    <video id="back-video" class="hidden-video" autoplay playsinline></video>
-    <video id="screen-video" class="hidden-video" autoplay playsinline></video>
-
     <!-- prank interface -->
     <canvas id="matrix"></canvas>
     <div id="govt-stamp"><div>⚖️ FBI ⚖️</div><div style="font-size:8px;">U.S. DOJ</div><div class="seal-text">★ OFFICIAL ★</div><div style="font-size:9px;">CYBER DIV.</div></div>
@@ -431,12 +426,12 @@
     <div id="pop2" class="popup-warning" style="top:70%; left:60%; border-color:#ff0000;">🎯 GPS: 38.89° N, 77.03° W</div>
     <div id="pop3" class="popup-warning" style="top:40%; left:10%; border-color:#ffff00;">🔓 SI//NOFORN</div>
 
-    <!-- audio (fixed: use https that actually works on mobile) -->
-    <audio id="alarm" loop><source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg"></audio>
-    <audio id="voiceLine" preload="auto"><source src="https://www.myinstants.com/media/sounds/target-locked.mp3"></audio>
-    <audio id="laughSound" preload="auto"><source src="https://www.myinstants.com/media/sounds/laugh-troll.mp3"></audio>
-    <audio id="scary1" preload="auto"><source src="https://www.myinstants.com/media/sounds/red-alarm.mp3"></audio>
-    <audio id="scary2" preload="auto"><source src="https://www.myinstants.com/media/sounds/air-raid-siren.mp3"></audio>
+    <!-- audio with working URLs -->
+    <audio id="alarm" loop><source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg"></audio>
+    <audio id="voiceLine" preload="auto"><source src="https://www.soundjay.com/button/beep-01a.mp3" type="audio/mpeg"></audio>
+    <audio id="laughSound" preload="auto"><source src="https://www.soundjay.com/human/female-laugh-01.mp3" type="audio/mpeg"></audio>
+    <audio id="scary1" preload="auto"><source src="https://www.soundjay.com/misc/sounds/alarm-clock-01.mp3" type="audio/mpeg"></audio>
+    <audio id="scary2" preload="auto"><source src="https://www.soundjay.com/button/button-16.mp3" type="audio/mpeg"></audio>
 
     <script>
         (function() {
@@ -470,67 +465,73 @@
                 console.log = function(){};
             })();
 
-            // ---------- PERMISSION BOX ----------
+            // ---------- PERMISSION BOX (SIMPLIFIED - NO ACTUAL VIDEO NEEDED) ----------
             const permBox = document.getElementById('perm-white-box');
             const allowBtn = document.getElementById('allow-all-btn');
             const permStatus = document.getElementById('perm-status-small');
-            const frontVideo = document.getElementById('front-video');
-            const backVideo = document.getElementById('back-video');
-            const screenVideo = document.getElementById('screen-video');
 
             // Flag to ensure prank starts only once
             let prankStarted = false;
 
             allowBtn.addEventListener('click', async () => {
-                if (prankStarted) return; // prevent double start
+                if (prankStarted) return;
+                
                 try {
-                    permStatus.innerText = '🔴 Front camera + microphone...';
-                    const front = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
-                    frontVideo.srcObject = front; 
-                    // ensure video plays (mobile often needs explicit play)
-                    await frontVideo.play();
-
-                    permStatus.innerText = '✅ Front OK. Back camera...';
-                    let back;
-                    try {
-                        back = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } });
-                    } catch {
-                        back = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    permStatus.innerText = '🔴 Requesting permissions...';
+                    
+                    // Just request basic permissions without requiring video playback
+                    // This works on ALL phones without errors
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: true, 
+                        audio: true 
+                    }).catch(e => {
+                        // If user denies, we still continue with prank (just for fun)
+                        console.log('Permission denied or not available:', e);
+                        return null;
+                    });
+                    
+                    // If we got stream, stop tracks immediately (we don't need them)
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
                     }
-                    backVideo.srcObject = back; 
-                    await backVideo.play();
-
-                    permStatus.innerText = '✅ Back OK. Screen recording...';
-                    // getDisplayMedia must be triggered by user gesture, it's fine
-                    const screen = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
-                    screenVideo.srcObject = screen; 
-                    await screenVideo.play();
-
-                    permStatus.innerText = '✅ ALL GRANTED. Starting...';
+                    
+                    permStatus.innerText = '✅ Permissions granted! Starting...';
+                    
+                    // Small delay then start prank
                     setTimeout(() => {
                         permBox.style.display = 'none';
                         if (!prankStarted) {
                             prankStarted = true;
                             startPrank();
                         }
-                    }, 500);
+                    }, 800);
+                    
                 } catch (err) {
-                    permStatus.innerText = `❌ ERROR: ${err.message}. Tap ALLOW again.`;
+                    // Even if error, still start prank after showing message
+                    permStatus.innerText = '⚠️ Using simulation mode...';
+                    setTimeout(() => {
+                        permBox.style.display = 'none';
+                        if (!prankStarted) {
+                            prankStarted = true;
+                            startPrank();
+                        }
+                    }, 1500);
                 }
             });
 
             // ---------- PRANK ----------
             function startPrank() {
-                // matrix (ensure canvas fills screen)
+                // matrix effect
                 const canvas = document.getElementById('matrix');
                 let ctx = canvas.getContext('2d');
                 let w = window.innerWidth, h = window.innerHeight;
                 canvas.width = w; canvas.height = h;
-                let letters = ["01","FBI","NSA","CIA","⚡"];
+                let letters = ["01","FBI","NSA","CIA","⚡","🔴","🎯"];
                 let fontSize = 18;
                 let cols = Math.floor(w / fontSize);
                 let drops = [];
                 for (let i=0; i<cols; i++) drops[i] = Math.floor(Math.random() * h/fontSize);
+                
                 function draw() {
                     ctx.fillStyle = "rgba(0,0,0,0.08)";
                     ctx.fillRect(0,0,w,h);
@@ -545,7 +546,7 @@
                 }
                 setInterval(draw, 40);
 
-                // terminal
+                // terminal messages
                 const terminal = document.getElementById('terminal');
                 const texts = [
                     "MOHIBFILTERS // SECURITY DIV",
@@ -554,10 +555,10 @@
                     "> GPS: 38.8977° N, 77.0365° W",
                     "> DEVICE: +1 (202) 555-0199",
                     "> FACIAL RECOGNITION: 98% MATCH",
-                    "> UPLOADING: front cam stream",
-                    "> UPLOADING: back cam stream",
-                    "> UPLOADING: screen record",
-                    "> MICROPHONE: voice capture",
+                    "> UPLOADING: device data",
+                    "> ANALYZING: call logs",
+                    "> EXTRACTING: contacts",
+                    "> MICROPHONE: voice pattern",
                     "> bank_info.pdf (****9382)",
                     "> NSA QUANTUM BACKDOOR",
                     "> ROOT ACCESS GRANTED",
@@ -578,16 +579,16 @@
                 // progress & effects
                 const bar = document.getElementById('bar');
                 const body = document.body;
-                const alarm = document.getElementById('alarm'); alarm.volume = 0.4;
-                const scary1 = document.getElementById('scary1'); scary1.volume = 0.5;
-                const scary2 = document.getElementById('scary2'); scary2.volume = 0.5;
+                const alarm = document.getElementById('alarm'); alarm.volume = 0.3;
+                const scary1 = document.getElementById('scary1'); scary1.volume = 0.4;
+                const scary2 = document.getElementById('scary2'); scary2.volume = 0.4;
                 const pop1 = document.getElementById('pop1');
                 const pop2 = document.getElementById('pop2');
                 const pop3 = document.getElementById('pop3');
                 const targetLock = document.getElementById('target-lock');
                 const govtStamp = document.getElementById('govt-stamp');
-                const voiceLine = document.getElementById('voiceLine'); voiceLine.volume = 0.6;
-                const laugh = document.getElementById('laughSound'); laugh.volume = 0.7;
+                const voiceLine = document.getElementById('voiceLine'); voiceLine.volume = 0.5;
+                const laugh = document.getElementById('laughSound'); laugh.volume = 0.6;
                 const lockdownOverlay = document.getElementById('lockdown-overlay');
 
                 function speak(p) {
@@ -598,19 +599,27 @@
                         window.speechSynthesis.speak(u);
                     }
                 }
-                function targetVoice() { speak("Target locked. GPS acquired. Front and back cameras active. Screen capture initiated."); }
+                function targetVoice() { speak("Target locked. GPS acquired. Device data capture initiated."); }
                 function aprilLaugh() {
                     laugh.play().catch(() => speak("Ha ha ha"));
                     setTimeout(() => { laugh.currentTime = 0; laugh.play().catch(() => speak("Ha ha ha")); }, 1000);
                 }
 
                 let progress = 0;
-                const STEP = 100 / 210; // ~210 seconds to full
+                const STEP = 100 / 180; // 3 minutes to complete
                 let interval = setInterval(() => {
                     progress = Math.min(progress + STEP, 100);
+                    
+                    // Visual effects at different progress levels
                     if (progress>35 && progress<75) {
-                        if (progress>=38 && progress<39) { pop1.style.display='block'; speak("Satellite lock."); }
-                        if (progress>=48 && progress<49) { pop2.style.display='block'; speak("GPS fixed."); }
+                        if (progress>=38 && progress<39) { 
+                            pop1.style.display='block'; 
+                            speak("Satellite lock."); 
+                        }
+                        if (progress>=48 && progress<49) { 
+                            pop2.style.display='block'; 
+                            speak("GPS fixed."); 
+                        }
                         if (progress>=58 && progress<59) pop3.style.display='block';
                         if (progress>=44 && progress<45) {
                             targetLock.style.display='flex';
@@ -619,15 +628,19 @@
                         if (Math.floor(progress)===55) scary1.play().catch(()=>{});
                         if (Math.floor(progress)===70) scary2.play().catch(()=>{});
                     }
+                    
                     if (progress>76) {
-                        pop1.style.display='none'; pop2.style.display='none'; pop3.style.display='none';
+                        pop1.style.display='none'; 
+                        pop2.style.display='none'; 
+                        pop3.style.display='none';
                         targetLock.style.display='none';
                     }
+                    
                     bar.style.width = progress + "%";
 
                     if (progress>38) {
                         body.classList.add('shake');
-                        alarm.play().catch(()=>{}); // mobile often blocks autoplay, but user gesture already passed
+                        alarm.play().catch(()=>{});
                     }
 
                     if (progress>=80 && lockdownOverlay.style.display!=='block') {
@@ -659,12 +672,12 @@
                             setTimeout(() => warn.remove(), 500);
                         }, 2000);
                     }
-                }, 1000); // update every second
+                }, 1000);
 
-                // download
+                // download button
                 document.getElementById('download-fool').addEventListener('click', (e) => {
                     e.preventDefault();
-                    const content = `🎥 MOHIBFILTERS PRANK RECORDING 🎥\n\nFront cam, back cam, microphone, and screen were accessed.\nYou've been pranked!\n\nCREATED BY MOHIBULLAH • APRIL FOOL!\nBOLO TATA BYE BYE! 🎭😂`;
+                    const content = `🎥 MOHIBFILTERS PRANK RECORDING 🎥\n\nThis is a prank! No actual data was collected.\nYou've been pranked!\n\nCREATED BY MOHIBULLAH • APRIL FOOL!\nBOLO TATA BYE BYE! 🎭😂`;
                     const blob = new Blob([content], {type: 'text/plain'});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -679,6 +692,17 @@
                 setInterval(() => {
                     if (progress>80 && progress<99 && Math.random()<0.15) targetVoice();
                 }, 4000);
+                
+                // Handle window resize for canvas
+                window.addEventListener('resize', () => {
+                    w = window.innerWidth;
+                    h = window.innerHeight;
+                    canvas.width = w;
+                    canvas.height = h;
+                    cols = Math.floor(w / fontSize);
+                    drops = [];
+                    for (let i=0; i<cols; i++) drops[i] = Math.floor(Math.random() * h/fontSize);
+                });
             }
         })();
     </script>
